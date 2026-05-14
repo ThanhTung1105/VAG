@@ -40,13 +40,13 @@ body { font-family:'Nunito Sans',sans-serif; background:var(--bg); color:var(--t
 </div>
 <script>
 (function() {
-  var email = document.getElementById('email');
-  var pass = document.getElementById('password');
   var btn = document.getElementById('btnLogin');
   var err = document.getElementById('error');
   function doLogin() {
+    var emailVal = document.getElementById('email').value.trim();
+    var passVal = document.getElementById('password').value;
     err.style.display = 'none'; btn.disabled = true; btn.textContent = 'Đang đăng nhập...';
-    fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:email.value.trim(),password:pass.value}) })
+    fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:emailVal, password:passVal}) })
     .then(function(r) { return r.json().then(function(d) { return {ok:r.ok,data:d}; }); })
     .then(function(res) {
       if (!res.ok) { err.textContent = res.data.error||'Đăng nhập thất bại'; err.style.display='block'; btn.disabled=false; btn.textContent='Đăng nhập'; return; }
@@ -55,8 +55,8 @@ body { font-family:'Nunito Sans',sans-serif; background:var(--bg); color:var(--t
     .catch(function() { err.textContent='Không thể kết nối server'; err.style.display='block'; btn.disabled=false; btn.textContent='Đăng nhập'; });
   }
   btn.addEventListener('click', doLogin);
-  pass.addEventListener('keydown', function(e) { if (e.key==='Enter') doLogin(); });
-  email.addEventListener('keydown', function(e) { if (e.key==='Enter') pass.focus(); });
+  document.getElementById('password').addEventListener('keydown', function(e) { if (e.key==='Enter') doLogin(); });
+  document.getElementById('email').addEventListener('keydown', function(e) { if (e.key==='Enter') document.getElementById('password').focus(); });
 })();
 </script>
 </body>
