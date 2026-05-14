@@ -4,3 +4,5 @@ flask-migrate==4.1.0
 pymysql==1.1.1
 python-dotenv==1.1.0
 werkzeug==3.0.6
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
