@@ -1,0 +1,31 @@
+<div class="sec" id="health_chip">
+  <div class="sec-head"><span class="sec-title">Health Chip</span><span class="sec-id">common/health_chip</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Pill màu theo health. Editable: mũi tên dropdown.</p>
+  <div class="card">
+    <div class="row">
+      <div class="row-label">Read-only</div>
+      <span class="pmo-health h-ot">Đúng tiến độ</span>
+      <span class="pmo-health h-ar">Có rủi ro</span>
+      <span class="pmo-health h-bs">Chậm tiến độ</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row-label">Editable — click để chọn health</div>
+    <div class="row" id="healthEditable"></div>
+  </div>
+  <div class="card" id="healthChipJs"></div>
+</div>
+<script>
+document.getElementById('healthEditable').innerHTML =
+  PMO.HealthChip.render('on_track', {editable:true}) + ' ' +
+  PMO.HealthChip.render('at_risk', {editable:true}) + ' ' +
+  PMO.HealthChip.render('behind_schedule', {editable:true});
+
+document.getElementById('healthChipJs').innerHTML =
+  '<div class="row-label">JS-rendered (read-only)</div><div class="row">' +
+  PMO.HealthChip.render('on_track') + ' ' +
+  PMO.HealthChip.render('at_risk') + ' ' +
+  PMO.HealthChip.render('behind_schedule') +
+  '</div>';
+</script>

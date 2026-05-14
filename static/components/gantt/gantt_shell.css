@@ -1,0 +1,188 @@
+/* ═══════════════════════════════════════════════════════
+   gantt — Full Gantt chart layout
+   ═══════════════════════════════════════════════════════ */
+
+/* ── App shell ── */
+.gantt-app { display: flex; flex-direction: column; height: 100%; font-family: var(--font, 'Nunito Sans', sans-serif); font-size: 12.5px; color: var(--t1); background: var(--bg-app); overflow: hidden; }
+
+/* ── Toolbar ── */
+.gantt-tb { height: 44px; background: var(--bg-white); border-bottom: 1px solid var(--b-light); display: flex; align-items: center; padding: 0 16px; gap: 8px; flex-shrink: 0; z-index: 100; }
+.gantt-tb-brand { font-weight: 700; font-size: 14px; color: var(--brand); margin-right: 12px; letter-spacing: -0.3px; }
+.gantt-tb-sep { width: 1px; height: 20px; background: var(--b-light); margin: 0 8px; }
+.gantt-tb-btn { height: 30px; padding: 0 12px; border: 1px solid var(--b-light); border-radius: 6px; background: var(--bg-white); font-family: inherit; font-size: 12px; font-weight: 500; color: var(--t2); cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all .15s; white-space: nowrap; }
+.gantt-tb-btn:hover { background: var(--bg-app); border-color: var(--b-medium); }
+.gantt-tb-btn.active { background: var(--brand); color: var(--tw); border-color: var(--brand); }
+.gantt-tb-right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.gantt-tb-zoom { display: flex; align-items: center; border: 1px solid var(--b-light); border-radius: 6px; overflow: hidden; }
+.gantt-tb-zoom button { height: 28px; width: 28px; border: none; background: var(--bg-white); cursor: pointer; font-size: 14px; color: var(--t2); display: flex; align-items: center; justify-content: center; }
+.gantt-tb-zoom button:hover { background: var(--bg-app); }
+.gantt-tb-zoom span { font-size: 11px; font-weight: 500; color: var(--t2); padding: 0 8px; border-left: 1px solid var(--b-light); border-right: 1px solid var(--b-light); height: 28px; display: flex; align-items: center; min-width: 50px; justify-content: center; }
+
+/* ── Main container ── */
+.gantt-main { flex: 1; display: flex; overflow: hidden; position: relative; }
+
+/* Last column resize handle is also the panel edge */
+.gantt-lp { border-right: 1px solid var(--b-light); }
+
+/* ── Left panel ── */
+.gantt-lp { flex-shrink: 0; display: flex; flex-direction: column; background: var(--bg-white); overflow: hidden; }
+
+/* Header and body share a horizontal scroll container approach:
+   - Header has overflow:hidden, JS syncs scrollLeft from body
+   - Body has overflow:auto (both X and Y)
+   - All cells use fixed px widths (no flex:1)
+*/
+.gantt-lp-head { border-bottom: 2px solid var(--b-medium); background: var(--bg-white); flex-shrink: 0; overflow: hidden; }
+.gantt-lp-head-inner { display: flex; white-space: nowrap; height: 100%; }
+.gantt-lp-hcell { display: flex; align-items: center; padding: 0 8px; font-weight: 600; font-size: 11px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.3px; border-right: 1px solid var(--b-light); flex-shrink: 0; user-select: none; position: relative; height: 100%; }
+
+/* Column resize handle — on every column including last */
+.gantt-col-resize {
+  position: absolute; right: -2px; top: 0; bottom: 0;
+  width: 5px; cursor: col-resize; z-index: 5;
+  background: transparent; transition: background .1s;
+}
+.gantt-col-resize:hover,
+.gantt-col-resize.dragging { background: var(--brand); }
+
+.gantt-lp-body { flex: 1; overflow: auto; position: relative; }
+.gantt-lp-body::-webkit-scrollbar { width: 6px; height: 6px; }
+.gantt-lp-body::-webkit-scrollbar-track { background: transparent; }
+.gantt-lp-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+.gantt-lp-body::-webkit-scrollbar-corner { background: transparent; }
+
+/* Virtual scroll spacer */
+.gantt-vs { position: relative; }
+
+/* ── Tree rows ── */
+.gantt-row { display: flex; align-items: stretch; position: absolute; left: 0; border-bottom: 1px solid var(--b-light); cursor: pointer; transition: background .08s; white-space: nowrap; }
+.gantt-row:hover { background: #F0F7FF !important; }
+.gantt-row.hl { background: #DBEAFE !important; }
+.gantt-row.lv-program { background: var(--bg-program); border-top: 2.5px solid var(--b-program); font-weight: 700; }
+.gantt-row.lv-project { background: var(--bg-project); border-top: 2px solid var(--b-project); font-weight: 600; }
+.gantt-row.lv-phase { background: var(--bg-phase); border-top: 1px solid var(--b-medium); font-weight: 600; color: var(--t2); }
+.gantt-row.lv-wp { background: var(--bg-white); }
+.gantt-row.lv-task { background: var(--bg-white); font-size: 12px; }
+.gantt-row.lv-subtask { background: #FAFBFC; font-size: 11.5px; color: var(--t2); }
+.gantt-row.strat-prj { }
+
+/* ── Tree cells ── */
+.gantt-cell { display: flex; align-items: center; padding: 0 6px; overflow: hidden; flex-shrink: 0; border-right: 1px solid var(--b-light); }
+.gantt-cell:last-child { border-right: none; }
+.gantt-cell.name { gap: 4px; min-width: 0; }
+
+/* Toggle + icons */
+.gantt-tog { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: none; background: transparent; cursor: pointer; flex-shrink: 0; color: var(--t3); font-size: 10px; transition: all .15s; }
+.gantt-tog:hover { background: #E5E7EB; color: var(--t1); }
+.gantt-tog.col svg { transform: rotate(-90deg); }
+.gantt-tog-ph { width: 18px; flex-shrink: 0; }
+.gantt-rn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+.gantt-li { width: 16px; height: 16px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: white; flex-shrink: 0; margin-right: 4px; }
+.gantt-li.prg { background: var(--brand); }
+.gantt-li.prj { background: #3B82F6; }
+.gantt-li.ph { background: #60A5FA; font-size: 7px; }
+
+/* Cell content: use library component default sizes — no overrides */
+.gantt-cell .pmo-avatar { width: 22px; height: 22px; font-size: 9px; border: 1.5px solid var(--bg-white); }
+.gantt-cell .pmo-avatar.av-more { background: #F3F4F6; color: var(--t3); font-size: 9px; margin-left: -6px; }
+.gantt-cell .gantt-kqc { font-size: 10.5px; color: var(--t2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Right panel ── */
+.gantt-rp { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.gantt-rp-head { overflow: hidden; flex-shrink: 0; border-bottom: 2px solid var(--b-medium); position: relative; }
+.gantt-rp-head-inner { display: flex; flex-direction: column; height: 100%; position: absolute; top: 0; left: 0; }
+.gantt-th-row { display: flex; }
+.gantt-th-cell { display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 600; color: var(--t2); border-right: 1px solid var(--b-light); border-bottom: 1px solid var(--b-light); flex-shrink: 0; user-select: none; }
+.gantt-th-cell.mo { background: var(--brand); color: var(--tw); font-weight: 600; letter-spacing: 0.3px; }
+.gantt-th-cell.wk { background: var(--brand-light); color: var(--brand-dark); font-size: 10px; }
+.gantt-th-cell.dy { font-size: 9.5px; font-weight: 500; line-height: 1.1; text-align: center; padding: 1px 0; }
+.gantt-th-cell.dy.td { background: #DBEAFE; color: var(--brand); font-weight: 700; }
+
+.gantt-rp-body { flex: 1; overflow: auto; position: relative; }
+.gantt-rp-body::-webkit-scrollbar { width: 6px; height: 8px; }
+.gantt-rp-body::-webkit-scrollbar-track { background: transparent; }
+.gantt-rp-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+.gantt-canvas { position: relative; min-height: 100%; }
+
+/* ── Timeline rows ── */
+.gantt-tl-row { position: absolute; left: 0; right: 0; display: flex; align-items: center; border-bottom: 1px solid var(--b-light); }
+.gantt-tl-row.lv-program { border-top: 2.5px solid var(--b-program); }
+.gantt-tl-row.lv-project { border-top: 2px solid var(--b-project); }
+.gantt-tl-row.lv-phase { border-top: 1px solid var(--b-medium); }
+.gantt-tl-row:hover { background: rgba(0,102,179,0.03); }
+.gantt-tl-row.hl { background: rgba(0,102,179,0.06); }
+
+/* ── Grid columns ── */
+.gantt-gc { position: absolute; top: 0; bottom: 0; }
+.gantt-gc.odd { background: #FAFBFC; }
+.gantt-gc.even { background: #FFFFFF; }
+.gantt-gc.td { background: rgba(26,140,255,0.06); }
+
+/* ── Today line ── */
+.gantt-today { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--c-bs); z-index: 20; pointer-events: none; }
+.gantt-today::before { content: 'Hôm nay'; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 600; color: var(--c-bs); white-space: nowrap; background: var(--c-bs-bg); padding: 1px 5px; border-radius: 3px; }
+
+/* ── Bars ── */
+.gantt-bar-c { position: absolute; height: var(--gantt-bar-h); top: 50%; transform: translateY(-50%); z-index: 10; cursor: pointer; }
+.gantt-bar-c.hl .pmo-bar-inner { box-shadow: 0 0 0 2px var(--brand), 0 2px 8px rgba(0,102,179,0.2); }
+.gantt-bar-c .pmo-bar { height: 100%; cursor: pointer; }
+
+/* ── Phase arrow on timeline ── */
+.gantt-ph-arrow { position: absolute; height: 20px; z-index: 8; pointer-events: none; top: 50%; transform: translateY(-50%); }
+.gantt-ph-dashline { position: absolute; width: 0; border-left: 1.5px dashed #EF4444; z-index: 7; pointer-events: none; opacity: 0.5; }
+
+/* ── Milestone on timeline ── */
+.gantt-ms { position: absolute; top: 50%; transform: translate(-50%, -50%); z-index: 15; pointer-events: none; }
+
+/* ── Strategy sub-rows ── */
+.gantt-strat-sub { position: absolute; left: 0; right: 0; display: flex; align-items: center; pointer-events: none; }
+.gantt-strat-sub.row1 { top: 4px; height: 22px; }
+.gantt-strat-sub.row2 { top: 28px; height: 20px; }
+.gantt-strat-sub.row3 { top: 50px; min-height: 18px; align-items: flex-start; }
+.gantt-kqc-lbl { position: absolute; font-size: 8.5px; color: var(--t2); white-space: normal; word-break: break-word; max-width: 130px; transform: translateX(-50%); text-align: center; pointer-events: none; line-height: 1.25; }
+
+/* Tooltip uses PMO.Tooltip from misc.css — no hardcode here */
+
+/* ── Editable cells ── */
+.gantt-editable {
+  outline: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .12s, background .12s;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+.gantt-editable:hover { background: rgba(0,102,179,0.04); }
+.gantt-editable:focus { border-bottom-color: var(--brand); background: rgba(0,102,179,0.06); }
+.gantt-editable:empty::before { content: '—'; color: var(--t3); }
+
+/* KQC editable — allow wrap on focus */
+.gantt-kqc.gantt-editable { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.gantt-kqc.gantt-editable:focus { white-space: normal; overflow: visible; position: relative; z-index: 5; background: var(--bg-white); box-shadow: var(--shadow-sm); min-width: 150px; }
+
+/* PIC cell — avatar + name text */
+.gantt-pic { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; padding: 1px 4px; border-radius: 10px; transition: background .1s; }
+.gantt-pic:hover { background: #F0F7FF; }
+.gantt-pic .pmo-avatar { width: 20px; height: 20px; font-size: 8px; }
+.gantt-pic-name { font-size: 10.5px; color: var(--t2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
+.gantt-pic-empty { font-size: 10px; color: var(--t3); cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+.gantt-pic-empty:hover { background: #F0F7FF; color: var(--brand); }
+
+/* Assignees cell — avatar group compact */
+.gantt-assignees { display: inline-flex; cursor: pointer; padding: 2px 0; border-radius: 4px; transition: background .1s; }
+.gantt-assignees:hover { background: #F0F7FF; }
+.gantt-assignees .pmo-avatar { width: 22px; height: 22px; font-size: 8.5px; }
+.gantt-assignees-empty { font-size: 10px; color: var(--t3); cursor: pointer; padding: 2px 6px; }
+.gantt-assignees-empty:hover { color: var(--brand); }
+
+/* Date in gantt cell — compact */
+.gantt-cell .pmo-date { font-size: 11px; }
+.gantt-cell .pmo-date.editable { padding: 1px 3px; margin: -1px -3px; }
+
+/* ── Drill-back button ── */
+.gantt-drill-back { background: var(--c-bs-bg) !important; color: var(--c-bs) !important; border-color: #FECACA !important; }
+
+/* User info in toolbar */
+.gantt-tb-user { display:flex; align-items:center; gap:8px; }
+.gantt-tb-username { font-size:12px; color:var(--t2); font-weight:500; }
+.gantt-tb-logout { font-size:11px !important; color:var(--t3) !important; }
+

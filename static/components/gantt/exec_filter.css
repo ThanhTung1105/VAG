@@ -1,0 +1,113 @@
+/* ═══ Exec Filter ═══ */
+
+/* Header filter icon — Excel-style, right corner of header cell */
+.ef-hbtn {
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  display:flex; align-items:center; justify-content:center;
+  width:18px; height:18px; border-radius:4px; cursor:pointer;
+  color:var(--t3); opacity:.5; transition:all .15s;
+}
+.ef-hbtn:hover { opacity:1; background:var(--brand-light,#E8F2FA); color:var(--brand); }
+.ef-hbtn.has-filter { opacity:1; color:var(--brand); }
+.exec-hcell { position:relative; padding-right:28px !important; }
+
+/* Filter row */
+.exec-filter-row {
+  display:flex; background:#F4F6F8;
+  border-bottom:1px solid var(--b-light,#E5E7EB);
+}
+.ef-cell {
+  display:flex; align-items:center; justify-content:center;
+  padding:4px 5px; border-right:1px solid var(--b-light);
+  min-height:30px;
+}
+
+/* Text search */
+.ef-search {
+  display:flex; align-items:center; gap:4px; width:100%;
+  background:var(--bg-white,#fff); border:1px solid var(--b-light);
+  border-radius:5px; padding:3px 7px;
+}
+.ef-search .ef-ico { flex-shrink:0; color:var(--t3); }
+.ef-input {
+  border:none; outline:none; background:transparent;
+  font-size:11px; color:var(--t1); width:100%;
+  font-family:inherit; line-height:1.4;
+}
+.ef-input::placeholder { color:#B0B8C4; }
+
+/* "Có tôi" toggle */
+.ef-toggle {
+  padding:3px 10px; border-radius:14px; border:1px solid var(--b-light);
+  background:var(--bg-white); color:var(--t3); font-size:9.5px; font-weight:600;
+  cursor:pointer; white-space:nowrap; transition:all .15s; font-family:inherit;
+}
+.ef-toggle:hover { border-color:var(--brand); color:var(--brand); }
+.ef-toggle.on { background:var(--brand); color:#fff; border-color:var(--brand); }
+
+/* Date toggles — pill buttons */
+.ef-date { display:flex; align-items:center; gap:3px; }
+.ef-dtog {
+  padding:3px 8px; border-radius:14px; border:1px solid var(--b-light);
+  background:var(--bg-white); color:var(--t3); font-size:9.5px; font-weight:600;
+  cursor:pointer; white-space:nowrap; transition:all .15s; font-family:inherit;
+}
+.ef-dtog:hover { border-color:var(--brand); color:var(--brand); }
+.ef-dtog.on { background:var(--brand); color:#fff; border-color:var(--brand); }
+
+/* Clear X for date filters */
+.ef-clear-x {
+  display:flex; align-items:center; justify-content:center;
+  width:18px; height:18px; border-radius:50%; border:none;
+  background:transparent; cursor:pointer; color:var(--t3);
+  transition:all .15s;
+}
+.ef-clear-x:hover { background:#FEE2E2; color:#EF4444; }
+
+/* Member group */
+.ef-member { display:flex; align-items:center; gap:3px; }
+
+/* Filter dropdown (multi-select) */
+.ef-dropdown {
+  background:var(--bg-white,#fff); border:1px solid var(--b-light);
+  border-radius:10px;
+  box-shadow:0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  min-width:200px; max-width:280px;
+  animation:efd-in .12s ease-out;
+}
+@keyframes efd-in { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+.efd-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px 8px; border-bottom:1px solid var(--b-light);
+}
+.efd-title { font-size:11px; font-weight:700; color:var(--t1); }
+.efd-clear {
+  font-size:10px; color:var(--brand); cursor:pointer;
+  background:none; border:none; font-weight:600; font-family:inherit;
+}
+.efd-clear:hover { text-decoration:underline; }
+.efd-list { max-height:220px; overflow-y:auto; padding:6px 8px; }
+.efd-list::-webkit-scrollbar { width:4px; }
+.efd-list::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:2px; }
+.efd-opt {
+  display:flex; align-items:center; gap:8px;
+  padding:5px 8px; border-radius:6px; cursor:pointer;
+  transition:background .1s;
+}
+.efd-opt:hover { background:var(--bg-app); }
+.efd-opt input[type="checkbox"] {
+  width:14px; height:14px; accent-color:var(--brand);
+  cursor:pointer; flex-shrink:0;
+}
+.efd-label { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--t1); }
+
+/* Date + completedAt columns: center */
+.exec-cell[data-col="dates"], .exec-cell[data-col="completedAt"],
+.exec-hcell[data-col="dates"], .exec-hcell[data-col="completedAt"],
+.ef-cell[data-col="dates"], .ef-cell[data-col="completedAt"] {
+  justify-content:center; text-align:center;
+}
+
+/* Filter area container */
+.exec-filter-area { flex-shrink:0; overflow:hidden; background:#F4F6F8; }
+.exec-filter-inner { display:inline-block; white-space:nowrap; }

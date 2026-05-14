@@ -1,0 +1,207 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-date — Date/Time Display (VN standard)
+   ═══════════════════════════════════════════════════════ */
+.pmo-date {
+  font-size: 11.5px;
+  color: var(--t2);
+  white-space: nowrap;
+  cursor: default;
+  line-height: 1.35;
+  display: inline-block;
+  position: relative;
+}
+.pmo-date.overdue { color: var(--c-bs); font-weight: 600; }
+.pmo-date .time { font-size: 10px; color: var(--t3); display: block; text-align: center; }
+.pmo-date .range-sep { color: var(--t3); margin: 0 2px; }
+.pmo-date .weekday { font-size: 10px; color: var(--t3); }
+
+/* Date block: inline-block for range items, text centered */
+.pmo-date .date-block {
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+}
+
+/* Editable */
+.pmo-date.editable { cursor: pointer; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; transition: background .12s; }
+.pmo-date.editable:hover { background: #F3F4F6; }
+
+/* Edit popover — fixed position, appended to body */
+.pmo-date-edit {
+  position: fixed;
+  background: var(--bg-white);
+  border: 1px solid var(--b-light);
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  padding: 12px;
+  z-index: 9000;
+  display: none;
+  min-width: 220px;
+  white-space: normal;
+}
+.pmo-date-edit.open { display: block; }
+.pmo-date-edit .ed-label {
+  font-size: 10px; font-weight: 600; color: var(--t3);
+  text-transform: uppercase; letter-spacing: 0.3px;
+  margin-bottom: 4px; margin-top: 10px; display: block;
+}
+.pmo-date-edit .ed-label:first-child { margin-top: 0; }
+.pmo-date-edit .ed-row {
+  display: flex; gap: 6px; align-items: center;
+}
+.pmo-date-edit .ed-input {
+  flex: 1; padding: 6px 8px;
+  border: 1.5px solid var(--b-light); border-radius: 4px;
+  font-family: inherit; font-size: 12.5px; color: var(--t1);
+  outline: none; transition: border-color .12s;
+  text-align: center; width: 100%;
+}
+.pmo-date-edit .ed-input:focus { border-color: var(--brand); }
+.pmo-date-edit .ed-input.time-input { max-width: 70px; }
+.pmo-date-edit .ed-input::placeholder { color: var(--t3); font-size: 11px; }
+.pmo-date-edit .ed-sep { color: var(--t3); font-size: 11px; flex-shrink: 0; }
+
+/* Toggle options */
+.pmo-date-edit .ed-toggles {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 10px; padding-top: 8px;
+  border-top: 1px solid var(--b-light);
+}
+.pmo-date-edit .ed-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 10px;
+  border: 1px solid var(--b-light); background: var(--bg-white);
+  font-family: inherit; font-size: 10.5px; color: var(--t2);
+  cursor: pointer; transition: all .12s; white-space: nowrap;
+}
+.pmo-date-edit .ed-toggle:hover { border-color: var(--brand); color: var(--brand); }
+.pmo-date-edit .ed-toggle.on { background: var(--brand-light); border-color: var(--brand); color: var(--brand); font-weight: 600; }
+
+/* Actions */
+.pmo-date-edit .ed-actions {
+  display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px;
+}
+.pmo-date-edit .ed-btn {
+  padding: 5px 14px; border: 1px solid var(--b-light); border-radius: 4px;
+  font-family: inherit; font-size: 11px; font-weight: 500;
+  cursor: pointer; background: var(--bg-white); color: var(--t2); transition: all .12s;
+}
+.pmo-date-edit .ed-btn:hover { background: var(--bg-app); }
+.pmo-date-edit .ed-btn.primary { background: var(--brand); color: var(--tw); border-color: var(--brand); }
+.pmo-date-edit .ed-btn.primary:hover { opacity: 0.85; }
+
+/* ═══════════════════════════════════════════════════════
+   pmo-note — Note Icon
+   ═══════════════════════════════════════════════════════ */
+.pmo-note {
+  width: 18px; height: 18px;
+  color: var(--t3);
+  cursor: pointer;
+  transition: color .15s;
+  flex-shrink: 0;
+}
+.pmo-note:hover { color: var(--brand); }
+
+/* ═══════════════════════════════════════════════════════
+   pmo-tooltip — Tooltip (for bar hover)
+   ═══════════════════════════════════════════════════════ */
+.pmo-tooltip {
+  position: fixed;
+  background: var(--bg-white);
+  border: 1px solid var(--b-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow-lg);
+  font-size: 11.5px;
+  max-width: 300px;
+  pointer-events: none;
+  z-index: 1000;
+  display: none;
+}
+.pmo-tooltip.vis { display: block; }
+.pmo-tooltip h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.pmo-tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; margin: 3px 0; }
+.pmo-tooltip .tt-label { color: var(--t3); }
+.pmo-tooltip .tt-val { font-weight: 500; text-align: right; }
+
+/* ═══════════════════════════════════════════════════════
+   pmo-phase-arrow — Phase Arrow (standalone)
+   ═══════════════════════════════════════════════════════ */
+.pmo-phase-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 24px;
+  padding: 0 18px 0 14px;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+.pmo-phase-arrow.first {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+}
+.pmo-phase-arrow.mid {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%);
+}
+
+/* ═══════════════════════════════════════════════════════
+   pmo-textbox — Inline Editable Text
+   ═══════════════════════════════════════════════════════ */
+.pmo-textbox {
+  display: inline-block;
+  min-width: 60px;
+  padding: 4px 8px;
+  border: 1.5px solid transparent;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: var(--t1);
+  background: transparent;
+  cursor: text;
+  transition: all .15s;
+  outline: none;
+}
+.pmo-textbox:hover { background: #F3F4F6; }
+.pmo-textbox:focus { border-color: var(--brand); background: white; box-shadow: 0 0 0 3px rgba(0,102,179,0.1); }
+.pmo-textbox.locked { cursor: default; opacity: 0.7; }
+.pmo-textbox.locked:hover { background: transparent; }
+.pmo-textbox.locked:focus { border-color: transparent; box-shadow: none; }
+.pmo-textbox.block {
+  display: block; width: 100%; min-height: 60px; white-space: pre-wrap;
+  word-wrap: break-word; line-height: 1.5;
+}
+.pmo-textbox[data-placeholder]:empty::before {
+  content: attr(data-placeholder); color: var(--t3, #9ca3af); pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   pmo-raiqd — RAIQD Chip
+   ═══════════════════════════════════════════════════════ */
+.pmo-raiqd {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
+}
+.pmo-raiqd.risk { background: #FEE2E2; color: #B91C1C; }
+.pmo-raiqd.issue { background: #FFEDD5; color: #C2410C; }
+.pmo-raiqd.action { background: var(--c-ip-bg); color: #1D4ED8; }
+.pmo-raiqd.question { background: var(--c-ir-bg); color: #6D28D9; }
+.pmo-raiqd.decision { background: #FCE7F3; color: #BE185D; }
+
+/* SubtaskStatus chip */
+.pmo-st-status { display:inline-flex; padding:2px 8px; border-radius:4px; font-size:10.5px; font-weight:700; }
+.pmo-st-status.editable { cursor:pointer; }
+.sts-uf { background:#E9EAEC; color:#8C939A; }
+.sts-fi { background:#EDE9FE; color:#8B5CF6; }
+.sts-ap { background:#DCFCE7; color:#16A34A; }

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VietAnh PMO</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/sidebar.css">
+<link rel="stylesheet" href="components/common/status_chip.css">
+<link rel="stylesheet" href="components/common/health_chip.css">
+<link rel="stylesheet" href="components/common/avatar.css">
+<link rel="stylesheet" href="components/common/bar.css">
+<link rel="stylesheet" href="components/common/milestone.css">
+<link rel="stylesheet" href="components/common/misc.css">
+<link rel="stylesheet" href="components/common/checkbox.css">
+<link rel="stylesheet" href="components/common/chip_member.css">
+<link rel="stylesheet" href="components/common/assign_member.css">
+<link rel="stylesheet" href="components/popover_detail/fields.css">
+<link rel="stylesheet" href="components/popover_detail/popover_shell.css">
+<link rel="stylesheet" href="components/popover_detail/breadcrumb.css">
+<link rel="stylesheet" href="components/popover_detail/subtask.css">
+<link rel="stylesheet" href="components/popover_detail/approve.css">
+<link rel="stylesheet" href="components/popover_detail/note.css">
+<link rel="stylesheet" href="components/popover_detail/trail.css">
+<link rel="stylesheet" href="components/popover_detail/task_list.css">
+<link rel="stylesheet" href="components/popover_detail/add_task.css">
+<link rel="stylesheet" href="components/gantt/gantt_shell.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- ═══ Sidebar ═══ -->
+<nav class="pmo-sidebar" id="pmoSidebar">
+  <div class="sb-profile">
+    <div class="sb-avatar" id="sbAvatar">?</div>
+    <div class="sb-label" style="display:flex;flex-direction:column;gap:1px">
+      <span class="sb-username" id="sbUsername">Đang tải...</span>
+      <span class="sb-role" id="sbRole"></span>
+    </div>
+  </div>
+
+  <div class="sb-nav">
+    <a href="#my-tasks" class="sb-item" data-page="my-tasks" data-tip="Việc của tôi">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><path d="M4 4h12a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M7 9l2 2 4-4"/></svg></div>
+      <span class="sb-label">Việc của tôi</span>
+    </a>
+    <a href="#report" class="sb-item" data-page="report" data-tip="Báo cáo">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><rect x="3" y="10" width="3" height="7" rx=".5"/><rect x="8.5" y="6" width="3" height="11" rx=".5"/><rect x="14" y="3" width="3" height="14" rx=".5"/></svg></div>
+      <span class="sb-label">Báo cáo</span>
+    </a>
+
+    <div class="sb-div"></div>
+
+    <a href="#gantt" class="sb-item active" data-page="gantt" data-tip="Gantt Chart">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="8" height="3" rx="1"/><rect x="6" y="9" width="10" height="3" rx="1"/><rect x="4" y="14" width="6" height="3" rx="1"/></svg></div>
+      <span class="sb-label">Gantt Chart</span>
+    </a>
+    <a href="#kanban" class="sb-item" data-page="kanban" data-tip="Kanban">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><rect x="2" y="3" width="5" height="14" rx="1"/><rect x="8" y="3" width="5" height="10" rx="1"/><rect x="14" y="3" width="4" height="7" rx="1"/></svg></div>
+      <span class="sb-label">Kanban</span>
+    </a>
+    <a href="#raiqd" class="sb-item" data-page="raiqd" data-tip="RAIQD">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><path d="M10 3l7 4v6l-7 4-7-4V7z"/><path d="M10 3v14"/><path d="M3 7l7 4 7-4"/></svg></div>
+      <span class="sb-label">RAIQD</span>
+    </a>
+    <a href="#workload" class="sb-item" data-page="workload" data-tip="Khối lượng CV">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2"/></svg></div>
+      <span class="sb-label">Khối lượng CV</span>
+    </a>
+  </div>
+
+  <div class="sb-bottom">
+    <a href="/admin" class="sb-item" id="sbAdminLink" data-tip="Quản trị" style="display:none">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3"/><path d="M10 2v2m0 12v2m-5.66-2.34l1.42-1.42m8.48-8.48l1.42-1.42M2 10h2m12 0h2m-2.34 5.66l-1.42-1.42M5.76 5.76L4.34 4.34"/></svg></div>
+      <span class="sb-label">Quản trị</span>
+    </a>
+    <a href="#settings" class="sb-item" data-tip="Cài đặt">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="3"/><path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg></div>
+      <span class="sb-label">Cài đặt</span>
+    </a>
+    <a href="javascript:void(0)" class="sb-item sb-logout" id="sbLogout" data-tip="Đăng xuất">
+      <div class="sb-icon"><svg viewBox="0 0 20 20"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3"/><path d="M13 14l4-4-4-4"/><line x1="17" y1="10" x2="7" y2="10"/></svg></div>
+      <span class="sb-label">Đăng xuất</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ═══ Main content ═══ -->
+<div class="pmo-main">
+  <div id="ganttApp" class="gantt-app" style="flex:1;overflow:hidden"></div>
+</div>
+
+<!-- Library components -->
+<script src="components/common/status_chip.js"></script>
+<script src="components/common/health_chip.js"></script>
+<script src="components/common/avatar.js"></script>
+<script src="components/common/bar.js"></script>
+<script src="components/common/milestone.js"></script>
+<script src="components/common/misc.js"></script>
+<script src="components/common/checkbox.js"></script>
+<script src="components/common/chip_member.js"></script>
+<script src="components/common/assign_member.js"></script>
+<script src="components/popover_detail/fields.js"></script>
+<script src="components/popover_detail/breadcrumb.js"></script>
+<script src="components/popover_detail/popover_shell.js"></script>
+<script src="components/popover_detail/subtask.js"></script>
+<script src="components/popover_detail/approve.js"></script>
+<script src="components/popover_detail/note.js"></script>
+<script src="components/popover_detail/trail.js"></script>
+<script src="components/popover_detail/task_list.js"></script>
+<script src="components/popover_detail/add_task.js"></script>
+
+<!-- API client -->
+<script src="components/api_client.js"></script>
+
+<!-- Gantt -->
+<script src="components/gantt/gantt_utils.js"></script>
+<script src="components/gantt/gantt.js"></script>
+
+<!-- API hooks -->
+<script src="components/api_hooks.js"></script>
+
+<script>
+(function() {
+  // ── Load user info into sidebar ──
+  fetch('/api/auth/me')
+    .then(function(r) { return r.json(); })
+    .then(function(u) {
+      if (u.error) { window.location.href = '/login'; return; }
+      document.getElementById('sbAvatar').textContent = (u.display_name || '?')[0].toUpperCase();
+      document.getElementById('sbUsername').textContent = u.display_name;
+      document.getElementById('sbRole').textContent = u.system_role === 'admin' ? 'Quản trị viên' : 'Thành viên';
+      if (u.system_role === 'admin') document.getElementById('sbAdminLink').style.display = '';
+      window._pmoUser = u;
+    })
+    .catch(function() { window.location.href = '/login'; });
+
+  // ── Logout ──
+  document.getElementById('sbLogout').addEventListener('click', function() {
+    fetch('/api/auth/logout', { method: 'POST' }).then(function() { window.location.href = '/login'; });
+  });
+
+  // ── Sidebar nav (future: SPA routing) ──
+  document.querySelectorAll('.sb-item[data-page]').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.querySelectorAll('.sb-item[data-page]').forEach(function(i) { i.classList.remove('active'); });
+      item.classList.add('active');
+      // Future: show/hide page panels based on data-page
+    });
+  });
+
+  // ── Load Gantt ──
+  var el = document.getElementById('ganttApp');
+  el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:var(--font);color:#666;">Đang tải dữ liệu...</div>';
+
+  fetch('/api/portfolio')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      el.innerHTML = '';
+      if (data && data.programs) {
+        data.programs.forEach(function(prg) {
+          (prg.projects || []).forEach(function(prj) {
+            (prj.phases || []).forEach(function(ph) {
+              (ph.workPackages || []).forEach(function(wp) {
+                (wp.tasks || []).forEach(function(t) {
+                  if (t.keyResult && !t.ketQuaChinh) t.ketQuaChinh = t.keyResult;
+                });
+              });
+            });
+          });
+        });
+      }
+      PMO.GanttChart.mount(el, data);
+      fetch('/api/portfolio/version?_t=' + Date.now())
+        .then(function(r) { return r.json(); })
+        .then(function(d) { window._pmoLoadVersion = d.version; });
+    })
+    .catch(function(err) {
+      console.error('API fetch failed:', err);
+      el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:var(--font);color:#c00;">Không thể kết nối API</div>';
+    });
+})();
+</script>
+</body>
+</html>

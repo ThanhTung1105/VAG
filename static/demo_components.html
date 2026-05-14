@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VietAnh PMO — Component Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Design Tokens -->
+<link rel="stylesheet" href="tokens.css">
+
+<!-- Common Components CSS -->
+<link rel="stylesheet" href="components/common/status_chip.css">
+<link rel="stylesheet" href="components/common/health_chip.css">
+<link rel="stylesheet" href="components/common/milestone.css">
+<link rel="stylesheet" href="components/common/bar.css">
+<link rel="stylesheet" href="components/common/avatar.css">
+<link rel="stylesheet" href="components/common/chip_member.css">
+<link rel="stylesheet" href="components/common/assign_member.css">
+<link rel="stylesheet" href="components/common/checkbox.css">
+<link rel="stylesheet" href="components/common/table.css">
+<link rel="stylesheet" href="components/common/misc.css">
+
+<!-- Popover Detail Components CSS -->
+<link rel="stylesheet" href="components/popover_detail/breadcrumb.css">
+<link rel="stylesheet" href="components/popover_detail/note.css">
+<link rel="stylesheet" href="components/popover_detail/trail.css">
+<link rel="stylesheet" href="components/popover_detail/subtask.css">
+<link rel="stylesheet" href="components/popover_detail/approve.css">
+<link rel="stylesheet" href="components/popover_detail/fields.css">
+<link rel="stylesheet" href="components/popover_detail/popover_shell.css">
+<link rel="stylesheet" href="components/popover_detail/add_task.css">
+<link rel="stylesheet" href="components/popover_detail/task_list.css">
+
+<style>
+/* ── Demo shell styles ── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Be Vietnam Pro', sans-serif; font-size: 13px; color: var(--t1); background: var(--bg-app); }
+
+.demo-nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 48px;
+  background: var(--bg-white); border-bottom: 1px solid var(--b-light);
+  display: flex; align-items: center; padding: 0 20px; gap: 6px;
+  z-index: 500; overflow-x: auto;
+}
+.demo-nav::-webkit-scrollbar { height: 0; }
+.demo-nav .nav-brand { font-weight: 700; font-size: 13px; color: var(--brand); margin-right: 12px; white-space: nowrap; flex-shrink: 0; }
+.demo-nav a {
+  padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 500;
+  color: var(--t2); text-decoration: none; white-space: nowrap; transition: all .12s; flex-shrink: 0;
+}
+.demo-nav a:hover { background: var(--brand-light); color: var(--brand); }
+.demo-nav a.active { background: var(--brand); color: var(--tw); }
+.demo-nav .sep { width: 1px; height: 20px; background: var(--b-light); margin: 0 4px; flex-shrink: 0; }
+
+.demo-content { max-width: 940px; margin: 0 auto; padding: 64px 24px 80px; }
+
+/* Shared demo classes used by component .html fragments */
+.sec { margin-bottom: 48px; scroll-margin-top: 64px; }
+.sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+.sec-title { font-size: 15px; font-weight: 700; color: var(--t1); }
+.sec-id { font-size: 11px; color: var(--t3); font-weight: 500; }
+.sec-desc { font-size: 12px; color: var(--t3); margin-bottom: 14px; margin-top: 4px; }
+.sec-line { width: 40px; height: 3px; background: var(--brand); border-radius: 2px; margin-bottom: 12px; }
+.card { background: var(--bg-white); border: 1px solid var(--b-light); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
+.row:last-child { margin-bottom: 0; }
+.row-label { font-size: 10.5px; font-weight: 600; color: var(--t3); text-transform: uppercase; letter-spacing: 0.4px; width: 100%; margin-bottom: 2px; }
+.spacer { height: 6px; }
+.swatch { display: inline-block; width: 44px; height: 26px; border-radius: 4px; vertical-align: middle; }
+.swatch-label { font-size: 11px; color: var(--t2); vertical-align: middle; margin-right: 12px; }
+
+/* Loading indicator */
+.demo-loading { text-align: center; padding: 60px 20px; color: var(--t3); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- Top Nav -->
+<nav class="demo-nav" id="nav">
+  <span class="nav-brand">⬡ PMO Components</span>
+  <span class="sep"></span>
+  <a href="#tokens">Tokens</a>
+  <a href="#status_chip">Status</a>
+  <a href="#health_chip">Health</a>
+  <a href="#milestone">Milestone</a>
+  <a href="#bar">Bar</a>
+  <a href="#avatar">Avatar</a>
+  <a href="#chip_member">Chip</a>
+  <a href="#assign_member">Assign</a>
+  <a href="#checkbox">Checkbox</a>
+  <a href="#table">Table</a>
+  <a href="#date">Date</a>
+  <a href="#tooltip">Tooltip</a>
+  <a href="#note">Note</a>
+  <a href="#raiqd">RAIQD</a>
+  <a href="#phase_arrow">Phase Arrow</a>
+  <a href="#textbox">Textbox</a>
+  <span class="sep"></span>
+  <a href="#breadcrumb">Breadcrumb</a>
+  <a href="#note_component">Note</a>
+  <a href="#trail">Trail</a>
+  <a href="#subtask">Subtask</a>
+  <a href="#approve">Approve</a>
+  <a href="#fields">Fields</a>
+  <a href="#task_overview">Task Mock</a>
+  <a href="#popover_shell">Popover</a>
+  <a href="#add_task">Add Task</a>
+  <a href="#task_list">Task List</a>
+</nav>
+
+<div class="demo-content" id="content">
+  <div class="demo-loading">Đang tải components...</div>
+</div>
+
+<!-- JS: load all component scripts first, then load HTML fragments -->
+<script src="components/common/status_chip.js"></script>
+<script src="components/common/health_chip.js"></script>
+<script src="components/common/milestone.js"></script>
+<script src="components/common/bar.js"></script>
+<script src="components/common/avatar.js"></script>
+<script src="components/common/chip_member.js"></script>
+<script src="components/common/assign_member.js"></script>
+<script src="components/common/checkbox.js"></script>
+<script src="components/common/table.js"></script>
+<script src="components/common/misc.js"></script>
+
+<!-- Popover Detail Components JS -->
+<script src="components/popover_detail/breadcrumb.js"></script>
+<script src="components/popover_detail/note.js"></script>
+<script src="components/popover_detail/trail.js"></script>
+<script src="components/popover_detail/subtask.js"></script>
+<script src="components/popover_detail/approve.js"></script>
+<script src="components/popover_detail/fields.js"></script>
+<script src="components/popover_detail/popover_shell.js"></script>
+<script src="components/popover_detail/add_task.js"></script>
+<script src="components/popover_detail/task_list.js"></script>
+
+<script>
+/**
+ * Load component HTML fragments sequentially into #content.
+ * Each fragment can contain <script> tags — we execute them after insertion.
+ */
+const FRAGMENTS = [
+  { id: 'tokens', html: `
+    <div class="sec" id="tokens">
+      <div class="sec-head"><span class="sec-title">Design Tokens</span><span class="sec-id">tokens.css</span></div>
+      <div class="sec-line"></div>
+      <p class="sec-desc">Biến CSS dùng chung, import trước mọi component.</p>
+      <div class="card">
+        <div class="row"><div class="row-label">Status</div>
+          <span class="swatch" style="background:var(--c-ns)"></span><span class="swatch-label">not started</span>
+          <span class="swatch" style="background:var(--c-ip)"></span><span class="swatch-label">in progress</span>
+          <span class="swatch" style="background:var(--c-ir)"></span><span class="swatch-label">in review</span>
+          <span class="swatch" style="background:var(--c-co)"></span><span class="swatch-label">completed</span>
+          <span class="swatch" style="background:repeating-linear-gradient(45deg,#D1D5DB,#D1D5DB 3px,#9CA3AF 3px,#9CA3AF 6px)"></span><span class="swatch-label">cancelled</span></div>
+        <div class="row"><div class="row-label">Health</div>
+          <span class="swatch" style="background:var(--c-co)"></span><span class="swatch-label">on track</span>
+          <span class="swatch" style="background:var(--c-ar)"></span><span class="swatch-label">at risk</span>
+          <span class="swatch" style="background:var(--c-bs)"></span><span class="swatch-label">behind</span></div>
+        <div class="row"><div class="row-label">Brand</div>
+          <span class="swatch" style="background:var(--brand)"></span><span class="swatch-label">primary</span>
+          <span class="swatch" style="background:var(--brand-dark)"></span><span class="swatch-label">dark</span>
+          <span class="swatch" style="background:var(--brand-light);border:1px solid var(--b-light)"></span><span class="swatch-label">light</span></div>
+      </div>
+    </div>` },
+  // Component fragments loaded from external files
+  { file: 'components/common/status_chip.html' },
+  { file: 'components/common/health_chip.html' },
+  { file: 'components/common/milestone.html' },
+  { file: 'components/common/bar.html' },
+  { file: 'components/common/avatar.html' },
+  { file: 'components/common/chip_member.html' },
+  { file: 'components/common/checkbox.html' },
+  { file: 'components/common/table.html' },
+  { file: 'components/common/misc.html' },
+  // Popover Detail
+  { file: 'components/popover_detail/breadcrumb.html' },
+  { file: 'components/popover_detail/note.html' },
+  { file: 'components/popover_detail/trail.html' },
+  { file: 'components/popover_detail/subtask.html' },
+  { file: 'components/popover_detail/approve.html' },
+  { file: 'components/popover_detail/fields.html' },
+  { file: 'components/popover_detail/popover_shell.html' },
+  { file: 'components/popover_detail/add_task.html' },
+  { file: 'components/popover_detail/task_list.html' },
+];
+
+async function loadFragments() {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+
+  for (const frag of FRAGMENTS) {
+    let html;
+    if (frag.html) {
+      html = frag.html;
+    } else {
+      try {
+        const resp = await fetch(frag.file);
+        if (!resp.ok) { console.warn('Failed to load', frag.file); continue; }
+        html = await resp.text();
+      } catch (e) { console.warn('Error loading', frag.file, e); continue; }
+    }
+
+    // Create a container, set innerHTML, append non-script nodes
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+
+    // Move all children to content
+    while (tmp.firstChild) {
+      const node = tmp.firstChild;
+      if (node.tagName === 'SCRIPT') {
+        // Execute script
+        const script = document.createElement('script');
+        script.textContent = node.textContent;
+        content.appendChild(script);
+        tmp.removeChild(node);
+      } else {
+        content.appendChild(node);
+      }
+    }
+  }
+
+  // Init scroll spy
+  initScrollSpy();
+
+  // Jump to hash if present
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 100);
+  }
+}
+
+function initScrollSpy() {
+  const sections = document.querySelectorAll('.sec');
+  const navLinks = document.querySelectorAll('.demo-nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-60px 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+}
+
+loadFragments();
+</script>
+</body>
+</html>

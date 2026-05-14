@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VietAnh PMO — RAIQD</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/sidebar.css">
+<link rel="stylesheet" href="components/common/work_item_picker.css">
+<link rel="stylesheet" href="components/common/status_chip.css">
+<link rel="stylesheet" href="components/common/health_chip.css">
+<link rel="stylesheet" href="components/common/avatar.css">
+<link rel="stylesheet" href="components/common/chip_member.css">
+<link rel="stylesheet" href="components/common/assign_member.css">
+<link rel="stylesheet" href="components/common/misc.css">
+<link rel="stylesheet" href="components/popover_detail/fields.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; }
+
+.raiqd-page { display:flex; flex-direction:column; height:100%; background:var(--bg-app); }
+.raiqd-header { display:flex; align-items:center; justify-content:space-between; padding:14px 24px; background:var(--bg-white); border-bottom:1px solid var(--b-light); flex-shrink:0; }
+.raiqd-header h1 { font-size:18px; font-weight:800; color:var(--t1); }
+
+.raiqd-tabs { display:flex; gap:0; padding:0 24px; background:var(--bg-white); border-bottom:1px solid var(--b-light); flex-shrink:0; }
+.raiqd-tab { padding:10px 18px; font-size:12.5px; font-weight:600; color:var(--t3); cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; display:flex; align-items:center; gap:6px; }
+.raiqd-tab:hover { color:var(--t2); }
+.raiqd-tab.active { color:var(--brand); border-bottom-color:var(--brand); }
+.raiqd-tab .tc { font-size:10px; font-weight:700; background:var(--bg-app); color:var(--t3); padding:1px 6px; border-radius:8px; min-width:18px; text-align:center; }
+.raiqd-tab.active .tc { background:var(--brand-light); color:var(--brand); }
+
+.raiqd-filters { display:flex; gap:8px; padding:12px 24px; flex-shrink:0; align-items:center; }
+.fsel { padding:6px 10px; font-size:11.5px; font-family:var(--font); border:1px solid var(--b-light); border-radius:6px; background:var(--bg-white); color:var(--t1); }
+
+.raiqd-table-wrap { flex:1; overflow:auto; padding:0 24px 24px; }
+table.rt { width:100%; border-collapse:separate; border-spacing:0; }
+.rt thead { position:sticky; top:0; z-index:2; }
+.rt th { background:var(--bg-app); padding:10px 12px; text-align:left; font-size:10.5px; font-weight:700; color:var(--t3); text-transform:uppercase; letter-spacing:.03em; border-bottom:1px solid var(--b-light); white-space:nowrap; }
+.rt td { padding:10px 12px; border-bottom:1px solid var(--b-light); font-size:12.5px; color:var(--t1); background:var(--bg-white); vertical-align:middle; }
+.rt tbody tr { cursor:pointer; transition:background .1s; }
+.rt tbody tr:hover td { background:var(--brand-light); }
+.rt .c-id { width:50px; color:var(--t3); font-weight:600; font-size:11px; }
+.rt .c-desc { max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rt .c-src { max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--t2); font-size:11.5px; }
+
+.link-pills { display:flex; gap:3px; flex-wrap:wrap; }
+.link-pill { display:inline-flex; align-items:center; gap:2px; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:600; background:var(--bg-app); color:var(--t2); }
+
+.btn { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:var(--font); transition:all .15s; }
+.btn-p { background:var(--brand); color:#fff; } .btn-p:hover { background:var(--brand-dark); }
+.btn-g { background:transparent; color:var(--t2); border:1px solid var(--b-light); } .btn-g:hover { background:var(--bg-app); }
+.btn-d { background:#fef2f2; color:#dc2626; border:1px solid #fecaca; } .btn-d:hover { background:#fee2e2; }
+.btn-sm { padding:5px 10px; font-size:11px; }
+
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.25); display:flex; align-items:flex-start; justify-content:center; z-index:400; padding-top:50px; }
+.modal { background:var(--bg-white); border:1px solid var(--b-light); border-radius:12px; width:620px; max-height:calc(100vh - 100px); display:flex; flex-direction:column; box-shadow:var(--shadow-lg); }
+.modal-h { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--b-light); }
+.modal-h h3 { font-size:14px; font-weight:700; }
+.modal-x { background:none; border:none; font-size:20px; color:var(--t3); cursor:pointer; }
+.modal-b { flex:1; overflow-y:auto; padding:18px 20px; }
+.modal-f { display:flex; justify-content:flex-end; gap:8px; padding:12px 20px; border-top:1px solid var(--b-light); }
+
+.fg { margin-bottom:12px; }
+.fg label { display:block; font-size:11px; font-weight:700; color:var(--t2); margin-bottom:4px; }
+.fg textarea { width:100%; padding:8px 12px; border:1px solid var(--b-light); border-radius:6px; font-size:12.5px; font-family:var(--font); color:var(--t1); background:var(--bg-app); resize:vertical; min-height:55px; }
+.fg textarea:focus { outline:none; border-color:var(--brand); background:var(--bg-white); }
+.fg-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.fg-field { display:flex; align-items:center; gap:8px; min-height:32px; }
+.fg-field .f-label { font-size:11px; font-weight:700; color:var(--t3); min-width:60px; }
+
+.links-sec { margin-top:14px; padding-top:12px; border-top:1px solid var(--b-light); }
+.links-sec h4 { font-size:11px; font-weight:700; color:var(--t3); margin-bottom:6px; text-transform:uppercase; }
+.lk-row { display:flex; align-items:center; gap:6px; padding:5px 0; border-bottom:1px solid var(--bg-app); font-size:11.5px; }
+.lk-dir { font-size:10px; color:var(--t3); font-weight:600; width:70px; }
+.lk-text { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lk-del { background:none; border:none; color:var(--t3); cursor:pointer; font-size:14px; } .lk-del:hover { color:#dc2626; }
+
+.empty-st { display:flex; flex-direction:column; align-items:center; justify-content:center; height:200px; color:var(--t3); }
+.empty-st .e-icon { font-size:32px; margin-bottom:8px; opacity:.5; }
+</style>
+</head>
+<body>
+<div class="pmo-main">
+  <div class="raiqd-page">
+    <div class="raiqd-header">
+      <h1>⬡ RAIQD Register</h1>
+      <div><button class="btn btn-p" id="btnNew">+ Thêm mới</button></div>
+    </div>
+    <div class="raiqd-tabs" id="tabs">
+      <div class="raiqd-tab active" data-type="risk">🔴 Risks <span class="tc" id="c-risk">0</span></div>
+      <div class="raiqd-tab" data-type="issue">🟠 Issues <span class="tc" id="c-issue">0</span></div>
+      <div class="raiqd-tab" data-type="action">🔵 Actions <span class="tc" id="c-action">0</span></div>
+      <div class="raiqd-tab" data-type="question">🟡 Questions <span class="tc" id="c-question">0</span></div>
+      <div class="raiqd-tab" data-type="decision">🟢 Decisions <span class="tc" id="c-decision">0</span></div>
+    </div>
+    <div class="raiqd-filters">
+      <select class="fsel" id="fSt"><option value="">Tất cả</option><option value="open" selected>Đang mở</option><option value="closed">Đã đóng</option></select>
+      <select class="fsel" id="fSv"><option value="">Mọi mức độ</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+      <select class="fsel" id="fPj"></select>
+    </div>
+    <div class="raiqd-table-wrap" id="tw"></div>
+  </div>
+</div>
+<div id="mr"></div>
+
+<script src="components/sidebar.js"></script>
+<script src="components/common/status_chip.js"></script>
+<script src="components/common/health_chip.js"></script>
+<script src="components/common/avatar.js"></script>
+<script src="components/common/chip_member.js"></script>
+<script src="components/common/assign_member.js"></script>
+<script src="components/common/misc.js"></script>
+<script src="components/common/work_item_picker.js"></script>
+<script src="components/common/raiqd_chips.js"></script>
+<script src="components/popover_detail/fields.js"></script>
+
+<script>
+(function() {
+  var A = '/api/raiqd', st = { type:'risk', items:[], members:[] };
+  var COLS = {
+    risk:['ID','Mô tả','Source','Impact','Mức độ','PIC','Deadline','Trạng thái','Links'],
+    issue:['ID','Mô tả','Source','Impact','Mức độ','PIC','Deadline','Trạng thái','Links'],
+    action:['ID','Phương án','Source','Mức độ','PIC','Deadline','Trạng thái','Links'],
+    question:['ID','Câu hỏi','Source','Mức độ','PIC','Trạng thái','Links'],
+    decision:['ID','Quyết định','Source','Người QĐ','Trạng thái','Links'],
+  };
+
+  function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+  function lnkPills(lks){
+    if(!lks||!lks.length)return'<span style="color:var(--t3)">—</span>';
+    return'<div class="link-pills">'+lks.map(function(l){var i=l.linked_item;if(!i)return'';
+      return'<span class="link-pill">'+(l.direction==='outgoing'?'→':'←')+' '+i.type[0].toUpperCase()+'#'+i.id+'</span>';
+    }).join('')+'</div>';
+  }
+
+  function loadPj(){
+    fetch('/api/portfolio').then(function(r){return r.json();}).then(function(t){
+      var s=document.getElementById('fPj');s.innerHTML='<option value="">Tất cả dự án</option>';
+      (t.programs||[]).forEach(function(p){(p.projects||[]).forEach(function(j){
+        s.innerHTML+='<option value="'+j.id.replace('prj','')+'">'+esc(j.name)+'</option>';
+      });});
+    });
+  }
+  function loadMb(){fetch('/api/admin/members/lookup').then(function(r){return r.json();}).then(function(d){st.members=d;});}
+  function loadCnt(){
+    fetch(A+'/summary').then(function(r){return r.json();}).then(function(d){
+      ['risk','issue','action','question','decision'].forEach(function(t){
+        var e=document.getElementById('c-'+t);if(e&&d[t])e.textContent=d[t].open||0;
+      });
+    });
+  }
+
+  function load(){
+    var p='?sort=created_at&order=desc';
+    var sv=document.getElementById('fSt').value,se=document.getElementById('fSv').value,pj=document.getElementById('fPj').value;
+    if(sv)p+='&status='+sv;if(se)p+='&severity='+se;if(pj)p+='&project_id='+pj;
+    fetch(A+'/'+st.type+p).then(function(r){return r.json();}).then(function(items){st.items=items;render();});
+  }
+
+  function render(){
+    var w=document.getElementById('tw'),cols=COLS[st.type];
+    if(!st.items.length){w.innerHTML='<div class="empty-st"><div class="e-icon">📋</div><div>Chưa có '+st.type+' nào</div></div>';return;}
+    var h='<table class="rt"><thead><tr>';
+    cols.forEach(function(c){h+='<th>'+c+'</th>';});
+    h+='</tr></thead><tbody>';
+    st.items.forEach(function(it){
+      h+='<tr data-id="'+it.id+'">';
+      h+='<td class="c-id">#'+it.id+'</td>';
+      if(st.type==='risk'||st.type==='issue'){
+        h+='<td class="c-desc" title="'+esc(it.description)+'">'+esc(it.description)+'</td>';
+        h+='<td class="c-src">'+esc(it.source_name||'—')+'</td>';
+        h+='<td class="c-src">'+esc(it.impact_name||'—')+'</td>';
+        h+='<td>'+PMO.SeverityChip.render(it.severity)+'</td>';
+        h+='<td>'+(it.pics&&it.pics.length?it.pics.map(function(p){return PMO.Avatar.render(p,'sm');}).join('')+' <span style="font-size:11px">'+it.pics.join(', ')+'</span>':'<span style="color:var(--t3)">—</span>')+'</td>';
+        h+='<td style="white-space:nowrap;font-size:11.5px">'+(it.deadline||'—')+'</td>';
+        h+='<td>'+PMO.RaiqdStatus.render(it.status)+'</td>';
+        h+='<td>'+lnkPills(it.links)+'</td>';
+      }else if(st.type==='action'){
+        h+='<td class="c-desc" title="'+esc(it.method)+'">'+esc(it.method||'—')+'</td>';
+        h+='<td class="c-src">'+esc(it.source_name||'—')+'</td>';
+        h+='<td>'+PMO.SeverityChip.render(it.severity)+'</td>';
+        h+='<td>'+(it.pics&&it.pics.length?it.pics.map(function(p){return PMO.Avatar.render(p,'sm');}).join('')+' <span style="font-size:11px">'+it.pics.join(', ')+'</span>':'—')+'</td>';
+        h+='<td style="white-space:nowrap;font-size:11.5px">'+(it.deadline||'—')+'</td>';
+        h+='<td>'+PMO.RaiqdStatus.render(it.status)+'</td>';
+        h+='<td>'+lnkPills(it.links)+'</td>';
+      }else if(st.type==='question'){
+        h+='<td class="c-desc" title="'+esc(it.question)+'">'+esc(it.question)+'</td>';
+        h+='<td class="c-src">'+esc(it.source_name||'—')+'</td>';
+        h+='<td>'+PMO.SeverityChip.render(it.severity)+'</td>';
+        h+='<td>'+(it.pics&&it.pics.length?it.pics.map(function(p){return PMO.Avatar.render(p,'sm');}).join('')+' <span style="font-size:11px">'+it.pics.join(', ')+'</span>':'—')+'</td>';
+        h+='<td>'+PMO.RaiqdStatus.render(it.status)+'</td>';
+        h+='<td>'+lnkPills(it.links)+'</td>';
+      }else if(st.type==='decision'){
+        h+='<td class="c-desc" title="'+esc(it.decision_text)+'">'+esc(it.decision_text)+'</td>';
+        h+='<td class="c-src">'+esc(it.source_name||'—')+'</td>';
+        h+='<td>'+(it.decided_by?PMO.Avatar.render(it.decided_by,'sm')+' <span style="font-size:11px">'+esc(it.decided_by)+'</span>':'—')+'</td>';
+        h+='<td>'+PMO.RaiqdStatus.render(it.status)+'</td>';
+        h+='<td>'+lnkPills(it.links)+'</td>';
+      }
+      h+='</tr>';
+    });
+    h+='</tbody></table>';
+    w.innerHTML=h;
+    w.querySelectorAll('tr[data-id]').forEach(function(tr){
+      tr.addEventListener('click',function(){
+        var it=st.items.find(function(i){return i.id==tr.dataset.id;});
+        if(it)openModal(it);
+      });
+    });
+  }
+
+  // ═══ MODAL ═══
+  function openModal(item){
+    var isE=!!item,tp=st.type,root=document.getElementById('mr');
+    var TL={risk:'Risk',issue:'Issue',action:'Action',question:'Question',decision:'Decision'};
+
+    var h='<div class="modal-overlay"><div class="modal">';
+    h+='<div class="modal-h"><h3>'+(isE?TL[tp]+' #'+item.id:'Thêm '+TL[tp])+'</h3><button class="modal-x">&times;</button></div>';
+    h+='<div class="modal-b">';
+
+    // Source picker
+    h+='<div class="fg"><label>Source (nguồn)</label><div id="srcPicker">'+
+      PMO.WorkItemPicker.renderChip(
+        isE?item.source_table:null, isE?item.source_id:null,
+        isE?item.source_name:null, {editable:true}
+      )+'</div></div>';
+
+    // Type-specific
+    if(tp==='risk'||tp==='issue'){
+      h+='<div class="fg"><label>Mô tả</label><div id="fDesc">'+PMO.Textbox.render(isE?item.description:'',{block:true,placeholder:'Nhập mô tả...'})+'</div></div>';
+      h+='<div class="fg"><label>Impact (nơi ảnh hưởng)</label><div id="impPicker">'+
+        PMO.WorkItemPicker.renderChip(
+          isE?item.impact_table:null, isE?item.impact_id:null,
+          isE?item.impact_name:null, {editable:true}
+        )+'</div></div>';
+      h+='<div class="fg-row"><div class="fg"><label>Mức độ</label><div id="fSev">'+PMO.SeverityChip.render(isE?item.severity:'medium',{editable:true})+'</div></div>';
+      h+='<div class="fg"><label>Trạng thái</label><div id="fRs">'+PMO.RaiqdStatus.render(isE?item.status:'open',{editable:true})+'</div></div></div>';
+      h+='<div class="fg-row"><div class="fg"><label>PIC</label><div id="fPic">'+
+        PMO.MemberField.renderList((isE&&item.pics?item.pics:[]).map(function(n){return{name:n};}),{maxLines:2,editable:true})+'</div></div>';
+      h+='<div class="fg"><label>Deadline</label><div id="fDl">'+
+        (PMO.Date?PMO.Date.render(isE&&item.deadline?item.deadline:'',{showTime:true,editable:true}):'')+'</div></div></div>';
+      h+='<div class="fg"><label>Đề xuất giải pháp</label><div id="fSol">'+PMO.Textbox.render(isE?item.proposed_solution||'':'',{block:true,placeholder:'Nhập đề xuất...'})+'</div></div>';
+    }else if(tp==='action'){
+      h+='<div class="fg"><label>Phương án thực hiện</label><div id="fMethod">'+PMO.Textbox.render(isE?item.method||'':'',{block:true,placeholder:'Nhập phương án...'})+'</div></div>';
+      h+='<div class="fg-row"><div class="fg"><label>Mức độ</label><div id="fSev">'+PMO.SeverityChip.render(isE?item.severity:'medium',{editable:true})+'</div></div>';
+      h+='<div class="fg"><label>Trạng thái</label><div id="fRs">'+PMO.RaiqdStatus.render(isE?item.status:'open',{editable:true})+'</div></div></div>';
+      h+='<div class="fg-row"><div class="fg"><label>PIC</label><div id="fPic">'+
+        PMO.MemberField.renderList((isE&&item.pics?item.pics:[]).map(function(n){return{name:n};}),{maxLines:2,editable:true})+'</div></div>';
+      h+='<div class="fg"><label>Deadline</label><div id="fDl">'+
+        (PMO.Date?PMO.Date.render(isE&&item.deadline?item.deadline:'',{showTime:true,editable:true}):'')+'</div></div></div>';
+    }else if(tp==='question'){
+      h+='<div class="fg"><label>Câu hỏi</label><div id="fQ">'+PMO.Textbox.render(isE?item.question||'':'',{block:true,placeholder:'Nhập câu hỏi...'})+'</div></div>';
+      h+='<div class="fg-row"><div class="fg"><label>Mức độ</label><div id="fSev">'+PMO.SeverityChip.render(isE?item.severity:'medium',{editable:true})+'</div></div>';
+      h+='<div class="fg"><label>Trạng thái</label><div id="fRs">'+PMO.RaiqdStatus.render(isE?item.status:'open',{editable:true})+'</div></div></div>';
+      h+='<div class="fg"><label>PIC</label><div id="fPic">'+
+        PMO.MemberField.renderList((isE&&item.pics?item.pics:[]).map(function(n){return{name:n};}),{maxLines:2,editable:true})+'</div></div>';
+    }else if(tp==='decision'){
+      h+='<div class="fg"><label>Quyết định</label><div id="fDec">'+PMO.Textbox.render(isE?item.decision_text||'':'',{block:true,placeholder:'Nhập quyết định...'})+'</div></div>';
+      h+='<div class="fg"><label>Trạng thái</label><div id="fRs">'+PMO.RaiqdStatus.render(isE?item.status:'open',{editable:true})+'</div></div>';
+    }
+
+    // Links section (show in both create and edit mode)
+    h+='<div class="links-sec"><h4>Liên kết</h4>';
+    h+='<div id="lkList">';
+    if(isE && item.links && item.links.length){
+      item.links.forEach(function(lk){var li=lk.linked_item;if(!li)return;
+        var dir=lk.direction==='outgoing'?lk.link_type+' →':'← '+lk.link_type;
+        h+='<div class="lk-row"><span class="lk-dir">'+dir+'</span>';
+        h+='<span class="link-pill">'+li.type[0].toUpperCase()+'#'+li.id+'</span>';
+        h+='<span class="lk-text">'+esc(li.text)+'</span>';
+        h+='<button class="lk-del" data-lid="'+lk.id+'">&times;</button></div>';
+      });
+    } else {
+      h+='<div class="lk-empty" style="color:var(--t3);font-size:11.5px;padding:6px 0">Chưa có liên kết</div>';
+    }
+    h+='</div>';
+    // Pending links (for create mode — stored in-memory until save)
+    h+='<div id="lkPending"></div>';
+    h+='<button class="btn btn-g btn-sm" id="btnAddLink" style="margin-top:8px">+ Thêm liên kết</button>';
+    h+='<div id="addLinkForm" style="display:none;margin-top:10px;padding:12px;background:var(--bg-app);border-radius:8px;border:1px solid var(--b-light)">';
+    h+='<div style="display:flex;gap:8px;margin-bottom:8px">';
+    h+='<select id="lkType" class="fsel" style="flex:1"><option value="">Loại liên kết</option></select>';
+    h+='<select id="lkTargetType" class="fsel" style="flex:1"><option value="">Loại đối tượng</option></select>';
+    h+='</div>';
+    h+='<select id="lkTargetItem" class="fsel" style="width:100%;margin-bottom:8px"><option value="">Chọn đối tượng</option></select>';
+    h+='<div style="display:flex;gap:6px;justify-content:flex-end">';
+    h+='<button class="btn btn-g btn-sm" id="lkCancel">Hủy</button>';
+    h+='<button class="btn btn-p btn-sm" id="lkSave">Tạo liên kết</button>';
+    h+='</div></div>';
+    h+='</div>';
+
+    h+='</div>';
+    h+='<div class="modal-f">';
+    if(isE)h+='<button class="btn btn-d btn-sm" id="mDel">Xóa</button><span style="flex:1"></span>';
+    h+='<button class="btn btn-g" id="mCan">Hủy</button><button class="btn btn-p" id="mSav">'+(isE?'Cập nhật':'Tạo mới')+'</button>';
+    h+='</div></div></div>';
+
+    root.innerHTML=h;
+
+    // Bind components
+    PMO.SeverityChip.bind(root);
+    PMO.RaiqdStatus.bind(root);
+    if(PMO.MemberField){
+      var picWrap=root.querySelector('#fPic [data-member-list]');
+      if(picWrap){
+        picWrap.addEventListener('click',function(e){
+          if(e.target.closest('.pmo-chip-add')||e.target.closest('[data-member-list]'))
+            PMO.MemberField._openListPicker(picWrap);
+        });
+      }
+    }
+
+    // Source picker click
+    var srcEl=root.querySelector('#srcPicker');
+    if(srcEl){
+      srcEl.addEventListener('click',function(e){
+        if(e.target.closest('.wip-chip-clear')){
+          srcEl.innerHTML=PMO.WorkItemPicker.renderChip(null,null,null,{editable:true});return;
+        }
+        if(e.target.closest('.wip-chip.editable')||e.target.closest('.wip-chip-select')){
+          PMO.WorkItemPicker.open(srcEl,{onSelect:function(tbl,id,bc){
+            srcEl.innerHTML=PMO.WorkItemPicker.renderChip(tbl,id,bc,{editable:true});
+          }});
+        }
+      });
+    }
+
+    // Impact picker click
+    var impEl=root.querySelector('#impPicker');
+    if(impEl){
+      impEl.addEventListener('click',function(e){
+        if(e.target.closest('.wip-chip-clear')){
+          impEl.innerHTML=PMO.WorkItemPicker.renderChip(null,null,null,{editable:true});return;
+        }
+        if(e.target.closest('.wip-chip.editable')||e.target.closest('.wip-chip-select')){
+          PMO.WorkItemPicker.open(impEl,{onSelect:function(tbl,id,bc){
+            impEl.innerHTML=PMO.WorkItemPicker.renderChip(tbl,id,bc,{editable:true});
+          }});
+        }
+      });
+    }
+
+    // Close
+    root.querySelector('.modal-x').addEventListener('click',function(){root.innerHTML='';});
+    document.getElementById('mCan').addEventListener('click',function(){root.innerHTML='';});
+    root.querySelector('.modal-overlay').addEventListener('click',function(e){if(e.target===e.currentTarget)root.innerHTML='';});
+
+    // Delete links
+    root.querySelectorAll('.lk-del').forEach(function(b){
+      b.addEventListener('click',function(e){e.stopPropagation();
+        fetch(A+'/links/'+b.dataset.lid,{method:'DELETE'}).then(function(){load();loadCnt();root.innerHTML='';});
+      });
+    });
+
+    // ── Add Link picker ──
+    var pendingLinks = []; // For create mode — stored until main save
+    // Valid link types: from current type → { link_type: [target_types] }
+    var VALID_LINKS = {
+      risk:     { generates: ['action','question'], causes: ['issue'] },
+      issue:    { generates: ['action','question'] },
+      action:   { resolves: ['risk','issue'], causes: ['risk','issue'] },
+      question: { generates: ['decision'] },
+      decision: { resolves: ['question'], generates: ['action'], causes: ['risk'] },
+    };
+    var LINK_LABELS = { generates: 'Sinh ra', resolves: 'Giải quyết', causes: 'Gây ra' };
+    var TYPE_LABELS = { risk:'Risk', issue:'Issue', action:'Action', question:'Question', decision:'Decision' };
+
+    var addLinkBtn = document.getElementById('btnAddLink');
+    var addLinkForm = document.getElementById('addLinkForm');
+    var lkTypeEl = document.getElementById('lkType');
+    var lkTargetTypeEl = document.getElementById('lkTargetType');
+    var lkTargetItemEl = document.getElementById('lkTargetItem');
+
+    if(addLinkBtn && addLinkForm){
+      addLinkBtn.addEventListener('click', function(){
+        addLinkForm.style.display = '';
+        addLinkBtn.style.display = 'none';
+        var validForType = VALID_LINKS[tp] || {};
+        lkTypeEl.innerHTML = '<option value="">Chọn loại liên kết</option>';
+        Object.keys(validForType).forEach(function(lt){
+          lkTypeEl.innerHTML += '<option value="'+lt+'">'+LINK_LABELS[lt]+' ('+lt+')</option>';
+        });
+        lkTargetTypeEl.innerHTML = '<option value="">Chọn loại đối tượng</option>';
+        lkTargetItemEl.innerHTML = '<option value="">Chọn đối tượng</option>';
+      });
+
+      document.getElementById('lkCancel').addEventListener('click', function(){
+        addLinkForm.style.display = 'none';
+        addLinkBtn.style.display = '';
+      });
+
+      lkTypeEl.addEventListener('change', function(){
+        var lt = lkTypeEl.value;
+        var validForType = VALID_LINKS[tp] || {};
+        var targets = validForType[lt] || [];
+        lkTargetTypeEl.innerHTML = '<option value="">Chọn loại đối tượng</option>';
+        targets.forEach(function(tt){
+          lkTargetTypeEl.innerHTML += '<option value="'+tt+'">'+TYPE_LABELS[tt]+'</option>';
+        });
+        lkTargetItemEl.innerHTML = '<option value="">Chọn đối tượng</option>';
+      });
+
+      lkTargetTypeEl.addEventListener('change', function(){
+        var tt = lkTargetTypeEl.value;
+        lkTargetItemEl.innerHTML = '<option value="">Đang tải...</option>';
+        if(!tt){ lkTargetItemEl.innerHTML = '<option value="">Chọn đối tượng</option>'; return; }
+        fetch(A+'/'+tt+'?status=open&sort=created_at&order=desc')
+          .then(function(r){return r.json();})
+          .then(function(items){
+            lkTargetItemEl.innerHTML = '<option value="">Chọn ('+items.length+' mục)</option>';
+            items.forEach(function(it){
+              var text = it.description || it.method || it.question || it.decision_text || '';
+              if(text.length > 50) text = text.slice(0,47) + '...';
+              lkTargetItemEl.innerHTML += '<option value="'+it.id+'">#'+it.id+' '+esc(text)+'</option>';
+            });
+          });
+      });
+
+      document.getElementById('lkSave').addEventListener('click', function(){
+        var lt = lkTypeEl.value;
+        var tt = lkTargetTypeEl.value;
+        var tid = lkTargetItemEl.value;
+        if(!lt || !tt || !tid){ alert('Vui lòng chọn đầy đủ'); return; }
+
+        if(isE){
+          // Edit mode: create link immediately via API
+          fetch(A+'/links', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ from_type:tp, from_id:item.id, to_type:tt, to_id:parseInt(tid), link_type:lt })
+          })
+          .then(function(r){ if(!r.ok) throw new Error('Failed'); return r.json(); })
+          .then(function(){
+            fetch(A+'/'+tp+'/'+item.id).then(function(r){return r.json();}).then(function(fresh){
+              root.innerHTML=''; openModal(fresh);
+            });
+            loadCnt();
+          })
+          .catch(function(e){ alert('Lỗi: '+e.message); });
+        } else {
+          // Create mode: store pending link, show in UI
+          var selText = lkTargetItemEl.options[lkTargetItemEl.selectedIndex].text;
+          pendingLinks.push({ to_type:tt, to_id:parseInt(tid), link_type:lt, display:selText });
+          var pEl = document.getElementById('lkPending');
+          var em = pEl.querySelector('.lk-empty'); if(em) em.remove();
+          var row = document.createElement('div');
+          row.className = 'lk-row';
+          row.innerHTML = '<span class="lk-dir">'+LINK_LABELS[lt]+' →</span>' +
+            '<span class="link-pill">'+TYPE_LABELS[tt][0]+'</span>' +
+            '<span class="lk-text">'+esc(selText)+'</span>' +
+            '<button class="lk-del">&times;</button>';
+          row.querySelector('.lk-del').addEventListener('click', function(){
+            var idx = pendingLinks.indexOf(pendingLinks.find(function(l){return l.to_id==tid&&l.link_type==lt;}));
+            if(idx>=0) pendingLinks.splice(idx,1);
+            row.remove();
+          });
+          pEl.appendChild(row);
+          addLinkForm.style.display = 'none';
+          addLinkBtn.style.display = '';
+        }
+      });
+    }
+
+    // Delete item
+    if(isE){document.getElementById('mDel').addEventListener('click',function(){
+      if(!confirm('Xóa '+TL[tp]+' #'+item.id+'?'))return;
+      fetch(A+'/'+tp+'/'+item.id,{method:'DELETE'}).then(function(){load();loadCnt();root.innerHTML='';});
+    });}
+
+    // Save
+    document.getElementById('mSav').addEventListener('click',function(){
+      var data={};
+      // Source
+      var srcChip=srcEl.querySelector('.wip-chip');
+      if(srcChip){data.source_table=srcChip.dataset.table||null;data.source_id=srcChip.dataset.id?parseInt(srcChip.dataset.id):null;}
+      // Impact
+      if(impEl){var impChip=impEl.querySelector('.wip-chip');
+        if(impChip){data.impact_table=impChip.dataset.table||null;data.impact_id=impChip.dataset.id?parseInt(impChip.dataset.id):null;}}
+      // Severity
+      var sevEl=root.querySelector('.pmo-severity');if(sevEl)data.severity=sevEl.dataset.sev;
+      // Status
+      var rsEl=root.querySelector('.pmo-raiqd-status');if(rsEl)data.status=rsEl.dataset.rs;
+      // PIC
+      var fPicEl=root.querySelector('#fPic');data.pic_names=PMO.ChipMember?PMO.ChipMember.collectNames(fPicEl):[];
+      // Deadline
+      var dlEl=root.querySelector('.pmo-date[data-cfg]');
+      if(dlEl){try{var cfg=JSON.parse(dlEl.dataset.cfg);
+        if(cfg.d){var ds=cfg.d;if(cfg.t)ds+=' '+cfg.t;
+          var p=ds.split(/[\s\/]+/);data.deadline=p.length>=3?(p[2]+'-'+p[1]+'-'+p[0]+(p[3]?'T'+p[3]:'')):ds;
+        }else{data.deadline=null;}
+      }catch(e){}}
+      // Text fields (PMO.Textbox = contenteditable span)
+      var descEl=document.querySelector('#fDesc .pmo-textbox');if(descEl)data.description=descEl.textContent.trim();
+      var solEl=document.querySelector('#fSol .pmo-textbox');if(solEl)data.proposed_solution=solEl.textContent.trim();
+      var methEl=document.querySelector('#fMethod .pmo-textbox');if(methEl)data.method=methEl.textContent.trim();
+      var qEl=document.querySelector('#fQ .pmo-textbox');if(qEl)data.question=qEl.textContent.trim();
+      var decEl=document.querySelector('#fDec .pmo-textbox');if(decEl)data.decision_text=decEl.textContent.trim();
+
+      // Include pending links (create mode)
+      if(!isE && pendingLinks.length){
+        data.links = pendingLinks.map(function(l){ return {to_type:l.to_type, to_id:l.to_id, link_type:l.link_type}; });
+      }
+
+      fetch(A+'/'+tp+(isE?'/'+item.id:''),{method:isE?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+        .then(function(r){if(!r.ok)throw new Error('Failed');return r.json();})
+        .then(function(){root.innerHTML='';load();loadCnt();})
+        .catch(function(e){alert('Lỗi: '+e.message);});
+    });
+  }
+
+  // Events
+  document.getElementById('tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.raiqd-tab');if(!t)return;
+    document.querySelectorAll('.raiqd-tab').forEach(function(x){x.classList.remove('active');});
+    t.classList.add('active');st.type=t.dataset.type;load();
+  });
+  ['fSt','fSv','fPj'].forEach(function(id){document.getElementById(id).addEventListener('change',load);});
+  document.getElementById('btnNew').addEventListener('click',function(){openModal(null);});
+
+  loadPj();loadMb();loadCnt();load();
+})();
+</script>
+</body>
+</html>

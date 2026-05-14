@@ -1,0 +1,31 @@
+<div class="sec" id="milestone">
+  <div class="sec-head"><span class="sec-title">Milestone Icon</span><span class="sec-id">common/milestone</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">big = ★, small = ◇. Màu theo Health.</p>
+  <div class="card">
+    <div class="row">
+      <div class="row-label">Big (star)</div>
+      <span class="pmo-ms"><span class="pmo-ms-star" style="color:var(--c-ip)">★</span></span>
+      <span class="pmo-ms"><span class="pmo-ms-star" style="color:var(--c-ar)">★</span></span>
+      <span class="pmo-ms"><span class="pmo-ms-star" style="color:var(--c-bs)">★</span></span>
+      <span class="pmo-ms"><span class="pmo-ms-star" style="color:var(--c-co)">★</span></span>
+    </div>
+    <div class="row">
+      <div class="row-label">Small (diamond)</div>
+      <span class="pmo-ms"><span class="pmo-ms-diamond" style="border-color:var(--c-ip)"></span></span>
+      <span class="pmo-ms"><span class="pmo-ms-diamond" style="border-color:var(--c-ar)"></span></span>
+      <span class="pmo-ms"><span class="pmo-ms-diamond" style="border-color:var(--c-bs)"></span></span>
+      <span class="pmo-ms"><span class="pmo-ms-diamond" style="border-color:var(--c-co)"></span></span>
+    </div>
+  </div>
+  <div class="card" id="milestoneJs"></div>
+</div>
+<script>
+document.getElementById('milestoneJs').innerHTML =
+  '<div class="row-label">JS-rendered</div><div class="row">' +
+  PMO.Milestone.render('big', 'on_track') + ' ' +
+  PMO.Milestone.render('big', 'at_risk') + ' ' +
+  PMO.Milestone.render('small', 'behind_schedule') + ' ' +
+  PMO.Milestone.render('none', 'on_track') +
+  '</div>';
+</script>

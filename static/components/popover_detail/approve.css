@@ -1,0 +1,138 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-approve — Sub-task approval item + list
+   When sub-task is ticked "finished", it appears here for approval
+   ═══════════════════════════════════════════════════════ */
+
+.pmo-approve-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pmo-approve-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--b-light);
+}
+.pmo-approve-item:last-child { border-bottom: none; }
+
+.pmo-approve-item .ap-body {
+  flex: 1;
+  min-width: 0;
+}
+.pmo-approve-item .ap-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+.pmo-approve-item .ap-content {
+  font-size: 12.5px;
+  color: var(--t1);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.pmo-approve-item .ap-meta {
+  font-size: 10.5px;
+  color: var(--t3);
+  margin-top: 2px;
+}
+.pmo-approve-item .ap-meta .ap-by { font-weight: 500; color: var(--t2); }
+
+/* Status badge */
+.pmo-approve-item .ap-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.pmo-approve-item .ap-badge.pending { background: var(--c-ir-bg); color: var(--c-ir); }
+.pmo-approve-item .ap-badge.approved { background: var(--c-co-bg); color: var(--c-co); }
+.pmo-approve-item .ap-badge.rejected { background: var(--c-bs-bg); color: var(--c-bs); }
+
+/* Action buttons */
+.pmo-approve-item .ap-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+}
+.pmo-approve-item .ap-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--b-light);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .12s;
+  background: var(--bg-white);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pmo-approve-item .ap-btn.approve {
+  background: var(--c-co-bg);
+  color: var(--c-co);
+  border-color: var(--c-co);
+}
+.pmo-approve-item .ap-btn.approve:hover { background: var(--c-co); color: white; }
+.pmo-approve-item .ap-btn.reject {
+  background: var(--c-bs-bg);
+  color: var(--c-bs);
+  border-color: var(--c-bs);
+}
+.pmo-approve-item .ap-btn.reject:hover { background: var(--c-bs); color: white; }
+
+/* Reject reason input */
+.pmo-approve-item .ap-reason {
+  margin-top: 6px;
+  display: none;
+}
+.pmo-approve-item .ap-reason.open { display: flex; gap: 6px; align-items: flex-end; }
+.pmo-approve-item .ap-reason textarea {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1.5px solid var(--c-bs);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11.5px;
+  color: var(--t1);
+  resize: none;
+  outline: none;
+  min-height: 32px;
+}
+.pmo-approve-item .ap-reason .ap-reason-send {
+  padding: 6px 10px;
+  border: none;
+  background: var(--c-bs);
+  color: white;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Note from approver */
+.pmo-approve-item .ap-note {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--t2);
+  padding: 6px 8px;
+  background: var(--bg-app);
+  border-radius: 4px;
+  border-left: 3px solid var(--c-bs);
+}
+.pmo-approve-item .ap-note.approve-note { border-left-color: var(--c-co); }
+
+.pmo-approve-empty {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--t3);
+  font-size: 12px;
+}

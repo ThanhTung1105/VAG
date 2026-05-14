@@ -1,0 +1,122 @@
+<div class="sec" id="fields">
+  <div class="sec-head"><span class="sec-title">Field Components</span><span class="sec-id">popover_detail/fields</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Execution Mode (chip + detail text), Deliverable Link, Summary, Progress Inline, Field Row layout. Tất cả editable.</p>
+
+  <div class="card" style="max-width:520px">
+    <div class="row-label">Execution Mode — click chip để đổi, textbox mô tả bên dưới</div>
+    <div id="execDemo"></div>
+  </div>
+
+  <div class="card" style="max-width:520px">
+    <div class="row-label">Deliverable Link</div>
+    <div id="linkDemo"></div>
+  </div>
+
+  <div class="card" style="max-width:520px">
+    <div class="row-label">Summary (Kết quả chính)</div>
+    <div id="summaryDemo"></div>
+  </div>
+
+  <div class="card" style="max-width:520px">
+    <div class="row-label">Progress Inline (bar + %)</div>
+    <div id="progressDemo"></div>
+  </div>
+</div>
+
+<!-- ═══════ TASK OVERVIEW MOCK ═══════ -->
+<div class="sec" id="task_overview">
+  <div class="sec-head"><span class="sec-title">Task Overview — Mock Layout</span><span class="sec-id">Xem trước Tab Tổng quan của Task popover</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Preview bố cục Tab Tổng quan. Tất cả các field đều editable.</p>
+  <div class="card" style="max-width:560px;padding:0;overflow:hidden" id="taskOverviewDemo"></div>
+</div>
+
+<script>
+(function(){
+  // Exec mode demos
+  document.getElementById('execDemo').innerHTML =
+    '<div style="margin-bottom:12px">' + PMO.ExecMode.render('workshop', 'Hội thảo tại phòng họp tầng 3, mời đội Citek tham dự', {editable:true}) + '</div>' +
+    '<div style="margin-bottom:12px">' + PMO.ExecMode.render('online', 'https://teams.microsoft.com/l/meetup-join/abc123', {editable:true}) + '</div>' +
+    '<div>' + PMO.ExecMode.render('independent', '', {editable:true}) + '</div>';
+
+  // Link demos
+  document.getElementById('linkDemo').innerHTML =
+    '<div style="margin-bottom:8px">' + PMO.DeliverableLink.render('https://drive.google.com/file/d/abc123/view', {editable:true}) + '</div>' +
+    '<div>' + PMO.DeliverableLink.render('', {editable:true}) + '</div>';
+
+  // Summary demos
+  document.getElementById('summaryDemo').innerHTML =
+    '<div style="margin-bottom:8px">' + PMO.Summary.render('Dự án chính thức được khởi động, đội dự án thành lập xong. Điều lệ dự án đã được phê duyệt.', {editable:true}) + '</div>' +
+    '<div>' + PMO.Summary.render('', {editable:true, placeholder:'Nhập kết quả chính...'}) + '</div>';
+
+  // Progress demos
+  document.getElementById('progressDemo').innerHTML =
+    '<div style="margin-bottom:8px">' + PMO.ProgressInline.render(80, 60, 'on_track', 'in_progress') + '</div>' +
+    '<div style="margin-bottom:8px">' + PMO.ProgressInline.render(40, 20, 'at_risk', 'in_progress') + '</div>' +
+    '<div>' + PMO.ProgressInline.render(100, 100, 'on_track', 'completed') + '</div>';
+
+  // ═══════ Task Overview Mock ═══════
+  var ov = document.getElementById('taskOverviewDemo');
+  var h = '';
+  // Header
+  h += '<div style="padding:14px 16px 10px;border-bottom:1px solid var(--b-light)">';
+  h += PMO.Breadcrumb.render([
+    {label:'Chuyển đổi số', level:'program', id:'prg1'},
+    {label:'SAP S/4HANA', level:'project', id:'prj1'},
+    {label:'Prepare', level:'phase', id:'ph1'},
+    {label:'Khởi động dự án', level:'wp', id:'wp1'},
+    {label:'Xây dựng kế hoạch dự án', level:'task', id:'t1'}
+  ]);
+  h += '<div contenteditable="true" style="font-size:16px;font-weight:700;color:var(--t1);margin-top:8px;outline:none;padding:2px 0;border-bottom:1.5px solid transparent;" onfocus="this.style.borderBottomColor=\'var(--brand)\'" onblur="this.style.borderBottomColor=\'transparent\'">Xây dựng kế hoạch dự án, chuẩn bị CSVC</div>';
+  h += '<div contenteditable="true" style="font-size:12px;color:var(--t2);margin-top:4px;outline:none;padding:2px 0;min-height:18px" data-placeholder="Thêm mô tả..." onfocus="this.style.background=\'#F3F4F6\';this.style.borderRadius=\'3px\';this.style.padding=\'4px 6px\'" onblur="this.style.background=\'\';this.style.padding=\'2px 0\'">Lên kế hoạch chi tiết cho giai đoạn Prepare, chuẩn bị cơ sở vật chất cho kick-off.</div>';
+  h += '</div>';
+
+  // Body
+  h += '<div style="padding:8px 16px 16px">';
+
+  // Row 1: Hình thức
+  h += PMO.Field.rowCol('Hình thức', PMO.ExecMode.render('offline', 'Họp trực tiếp tại văn phòng Việt Anh, tầng 3', {editable:true}));
+
+  // Row 2: Deliverable
+  h += PMO.Field.row('Kết quả', PMO.DeliverableLink.render('https://drive.google.com/file/abc', {editable:true}));
+
+  // Row 3: Status + Health
+  h += PMO.Field.row('Trạng thái',
+    PMO.StatusChip.render('in_progress', 'on_track', {editable:true}) + ' ' +
+    PMO.HealthChip.render('on_track', {editable:true})
+  );
+
+  // Row 4: Progress
+  h += PMO.Field.row('Tiến độ', PMO.ProgressInline.render(80, 60, 'on_track', 'in_progress'));
+
+  // Row 5: Summary
+  h += PMO.Field.rowCol('KQ chính', PMO.Summary.render('Kế hoạch dự án đã xong, team đã thành lập, điều lệ đã soạn.', {editable:true}));
+
+  // Row 6: Planned
+  h += PMO.Field.row('Kế hoạch', PMO.Date.renderRange('13/04/2026', '18/04/2026', {showTime:false, editable:true}));
+
+  // Row 7: Actual
+  h += PMO.Field.row('Thực hiện', PMO.Date.renderRange('13/04/2026', '17/04/2026', {showTime:false, editable:true}));
+
+  // Row 8: PIC + Approver
+  h += PMO.Field.row('PIC',
+    PMO.ChipMember.renderWithRole('Long NNL', 'BI Analyst', {removable:false}) +
+    '<span style="color:var(--t3);font-size:11px;margin:0 4px">·</span>' +
+    '<span style="font-size:11px;color:var(--t3)">Approver:</span> ' +
+    PMO.ChipMember.renderWithRole('Anh LTD', 'GĐ Điều hành', {removable:false})
+  );
+
+  // Row 9: Assignees
+  h += PMO.Field.row('Assignees',
+    PMO.ChipMember.renderList([
+      {name:'Long NNL', role:'BI Analyst'},
+      {name:'Hà NTT', role:'Admin'},
+      {name:'Minh PT', role:'IT'}
+    ], {maxLines:2, showAdd:true})
+  );
+
+  h += '</div>';
+  ov.innerHTML = h;
+})();
+</script>

@@ -1,0 +1,67 @@
+/* ═══════════════════════════════════════════════════════
+   VietAnh PMO — Design Tokens
+   Import this file FIRST in every page/component.
+   ═══════════════════════════════════════════════════════ */
+
+/* Global font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font: 'Nunito Sans', sans-serif;
+  /* Brand */
+  --brand: #0066B3;
+  --brand-dark: #004A82;
+  --brand-light: #E8F2FA;
+
+  /* Status */
+  --c-ns: #8C939A;     --c-ns-bg: #E9EAEC;
+  --c-ip: #1A8CFF;     --c-ip-bg: #E0F0FF;
+  --c-ir: #8B5CF6;     --c-ir-bg: #EDE9FE;
+  --c-co: #16A34A;     --c-co-bg: #DCFCE7;
+  --c-ca: #6B7280;
+
+  /* Health */
+  --c-ar: #EAB308;     --c-ar-bg: #FEF9C3;
+  --c-bs: #DC2626;     --c-bs-bg: #FEE2E2;
+
+  /* Surfaces */
+  --bg-app: #F8F9FB;
+  --bg-white: #FFFFFF;
+
+  /* Borders */
+  --b-light: #E5E7EB;
+  --b-medium: #D1D5DB;
+
+  /* Text */
+  --t1: #111827;
+  --t2: #4B5563;
+  --t3: #9CA3AF;
+  --tw: #FFFFFF;
+
+  /* Sizing */
+  --bar-r: 4px;
+  --radius: 6px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+
+  /* Gantt surfaces */
+  --bg-program: #E8F2FA;
+  --bg-project: #EEF4F9;
+  --bg-phase: #F5F8FB;
+
+  /* Gantt borders */
+  --b-program: #0066B3;
+  --b-project: #60A5FA;
+
+  /* Gantt sizing */
+  --gantt-row-h: 36px;
+  --gantt-bar-h: 32px;
+}
+
+/* Apply font globally */
+body, input, button, textarea, select {
+  font-family: var(--font);
+}

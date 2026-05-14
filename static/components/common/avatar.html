@@ -1,0 +1,25 @@
+<div class="sec" id="avatar">
+  <div class="sec-head"><span class="sec-title">Avatar & Avatar Group</span><span class="sec-id">common/avatar</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">PIC = 1 avatar. Group = PIC + "+N còn lại".</p>
+  <div class="card">
+    <div class="row"><div class="row-label">Default</div>
+      <span class="pmo-avatar">LN</span><span class="pmo-avatar">HN</span><span class="pmo-avatar">MP</span></div>
+    <div class="row"><div class="row-label">Small</div>
+      <span class="pmo-avatar sm">LN</span><span class="pmo-avatar sm">HN</span></div>
+    <div class="row"><div class="row-label">Group</div>
+      <span class="pmo-avatar-group"><span class="pmo-avatar">LN</span><span class="pmo-avatar more">+3</span></span>
+      &nbsp;
+      <span class="pmo-avatar-group"><span class="pmo-avatar sm">LN</span><span class="pmo-avatar sm more">+2</span></span></div>
+  </div>
+  <div class="card" id="avatarJs"></div>
+</div>
+<script>
+document.getElementById('avatarJs').innerHTML =
+  '<div class="row-label">JS-rendered</div><div class="row">' +
+  PMO.Avatar.render('Long NNL') + ' ' +
+  PMO.Avatar.render('Hà NTT', 'sm') + ' ' +
+  PMO.Avatar.renderGroup(['Long NNL','Hà NTT','Minh PT']) + ' ' +
+  PMO.Avatar.renderGroup(['Long NNL','Hà NTT'], 'sm') +
+  '</div>';
+</script>

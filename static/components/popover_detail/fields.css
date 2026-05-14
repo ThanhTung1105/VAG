@@ -1,0 +1,112 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-field — Popover detail field components
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Field row ── */
+.pmo-field {
+  display: flex; align-items: flex-start; gap: 0;
+  padding: 7px 0; border-bottom: 1px solid var(--b-light); font-size: 12.5px;
+}
+.pmo-field:last-child { border-bottom: none; }
+.pmo-field .f-label {
+  width: 100px; flex-shrink: 0;
+  font-size: 11.5px; font-weight: 500; color: var(--t3); padding-top: 3px;
+}
+.pmo-field .f-value {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+}
+.pmo-field .f-value.col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* ── Execution Mode ── */
+.pmo-exec-mode {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 10px;
+  font-size: 11px; font-weight: 500; white-space: nowrap;
+  height: 22px; line-height: 1; cursor: default;
+  width: auto; max-width: fit-content;
+}
+.pmo-exec-mode .em-icon { font-size: 12px; flex-shrink: 0; }
+.pmo-exec-mode.independent { background: #E0F2FE; color: #0369A1; }
+.pmo-exec-mode.online { background: #DBEAFE; color: #1D4ED8; }
+.pmo-exec-mode.offline { background: #E0E7FF; color: #4338CA; }
+.pmo-exec-mode.workshop { background: #FCE7F3; color: #BE185D; }
+.pmo-exec-mode.site_visit { background: #ECFDF5; color: #047857; }
+.pmo-exec-mode.presentation { background: #FEF3C7; color: #92400E; }
+.pmo-exec-mode.editable { cursor: pointer; padding-right: 6px; }
+.pmo-exec-mode.editable:hover { filter: brightness(0.95); }
+
+/* Detail text */
+.pmo-exec-detail {
+  width: 100%; padding: 4px 8px;
+  border: 1.5px solid transparent; border-radius: 4px;
+  font-family: inherit; font-size: 12px; color: var(--t2);
+  background: transparent; cursor: text; transition: all .12s; outline: none; min-height: 20px;
+}
+.pmo-exec-detail:hover { background: #F3F4F6; }
+.pmo-exec-detail:focus { border-color: var(--brand); background: white; box-shadow: 0 0 0 3px rgba(0,102,179,0.08); }
+.pmo-exec-detail:empty::before { content: attr(data-placeholder); color: var(--t3); font-style: italic; }
+.pmo-exec-detail.locked { cursor: default; }
+.pmo-exec-detail.locked:hover { background: transparent; }
+
+/* ── Deliverable Link ── */
+.pmo-deliverable {
+  display: inline-flex; align-items: center; gap: 4px; max-width: 100%;
+}
+.pmo-deliverable .dl-icon { width: 16px; height: 16px; color: var(--t3); flex-shrink: 0; }
+.pmo-deliverable .dl-input {
+  padding: 5px 8px; border: 1.5px solid transparent; border-radius: 4px;
+  font-family: inherit; font-size: 12px; color: var(--brand);
+  background: transparent; cursor: text; transition: all .12s; outline: none; min-width: 80px;
+}
+.pmo-deliverable .dl-input:hover { background: #F3F4F6; }
+.pmo-deliverable .dl-input:focus { border-color: var(--brand); background: white; box-shadow: 0 0 0 3px rgba(0,102,179,0.08); color: var(--t1); }
+.pmo-deliverable .dl-input:empty::before { content: 'Dán link kết quả...'; color: var(--t3); font-style: italic; }
+.pmo-deliverable .dl-input[data-has-link="true"] { color: var(--brand); text-decoration: underline; }
+.pmo-deliverable .dl-open {
+  width: 22px; height: 22px; border: none; background: var(--bg-app);
+  border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--t3); font-size: 11px; transition: all .1s; flex-shrink: 0;
+}
+.pmo-deliverable .dl-open:hover { background: var(--brand-light); color: var(--brand); }
+
+/* ── Summary ── */
+.pmo-summary {
+  width: 100%; padding: 6px 8px;
+  border: 1.5px solid transparent; border-radius: 6px;
+  font-family: inherit; font-size: 12.5px; color: var(--t1);
+  background: transparent; cursor: text; transition: all .12s; outline: none;
+  min-height: 36px; line-height: 1.45; resize: none;
+}
+.pmo-summary:hover { background: #F3F4F6; }
+.pmo-summary:focus { border-color: var(--brand); background: white; box-shadow: 0 0 0 3px rgba(0,102,179,0.08); }
+.pmo-summary:empty::before { content: attr(data-placeholder); color: var(--t3); font-style: italic; }
+.pmo-summary.locked { cursor: default; }
+.pmo-summary.locked:hover { background: transparent; }
+
+/* ── Progress inline ── */
+.pmo-progress-inline { display: flex; align-items: center; gap: 10px; width: 100%; }
+.pmo-progress-inline .pi-bar { flex: 1; height: 20px; }
+.pmo-progress-inline .pi-stats { display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; }
+.pmo-progress-inline .pi-stat { display: flex; align-items: baseline; gap: 2px; }
+.pmo-progress-inline .pi-num { font-size: 13px; font-weight: 700; color: var(--t1); font-variant-numeric: tabular-nums; }
+.pmo-progress-inline .pi-unit { font-size: 10px; font-weight: 400; color: var(--t3); }
+
+/* ── Milestone Field (editable) ── */
+.pmo-ms-field {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 6px; border-radius: 6px; cursor: default;
+}
+.pmo-ms-field.editable { cursor: pointer; }
+.pmo-ms-field.editable:hover { background: #F3F4F6; }
+
+/* ── Member Field ── */
+.pmo-member-single {
+  display: inline-flex; align-items: center; cursor: default;
+}
+.pmo-member-single.editable { cursor: pointer; border-radius: 14px; }
+.pmo-member-single.editable:hover { background: #F3F4F6; }

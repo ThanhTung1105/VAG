@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VietAnh PMO — Gantt</title>
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/components/sidebar.css">
+<link rel="stylesheet" href="/components/common/status_chip.css">
+<link rel="stylesheet" href="/components/common/health_chip.css">
+<link rel="stylesheet" href="/components/common/avatar.css">
+<link rel="stylesheet" href="/components/common/bar.css">
+<link rel="stylesheet" href="/components/common/milestone.css">
+<link rel="stylesheet" href="/components/common/misc.css">
+<link rel="stylesheet" href="/components/common/checkbox.css">
+<link rel="stylesheet" href="/components/common/chip_member.css">
+<link rel="stylesheet" href="/components/common/assign_member.css">
+<link rel="stylesheet" href="/components/popover_detail/fields.css">
+<link rel="stylesheet" href="/components/popover_detail/popover_shell.css">
+<link rel="stylesheet" href="/components/popover_detail/breadcrumb.css">
+<link rel="stylesheet" href="/components/popover_detail/subtask.css">
+<link rel="stylesheet" href="/components/popover_detail/approve.css">
+<link rel="stylesheet" href="/components/popover_detail/note.css">
+<link rel="stylesheet" href="/components/popover_detail/trail.css">
+<link rel="stylesheet" href="/components/popover_detail/task_list.css">
+<link rel="stylesheet" href="/components/popover_detail/add_task.css">
+<link rel="stylesheet" href="/components/gantt/gantt_shell.css">
+<link rel="stylesheet" href="/components/gantt/exec_view.css">
+<link rel="stylesheet" href="/components/gantt/exec_filter.css">
+<style>* { margin:0; padding:0; box-sizing:border-box; } html, body { height:100%; overflow:hidden; }</style>
+</head>
+<body>
+<div class="pmo-main"><div id="ganttApp" class="gantt-app" style="flex:1;overflow:hidden"></div></div>
+
+<!-- Sidebar (shared) -->
+<script src="/components/sidebar.js"></script>
+
+<!-- Components -->
+<script src="/components/common/status_chip.js"></script>
+<script src="/components/common/health_chip.js"></script>
+<script src="/components/common/avatar.js"></script>
+<script src="/components/common/bar.js"></script>
+<script src="/components/common/milestone.js"></script>
+<script src="/components/common/misc.js"></script>
+<script src="/components/common/checkbox.js"></script>
+<script src="/components/common/chip_member.js"></script>
+<script src="/components/common/assign_member.js"></script>
+<script src="/components/popover_detail/fields.js"></script>
+<script src="/components/popover_detail/breadcrumb.js"></script>
+<script src="/components/popover_detail/popover_shell.js"></script>
+<script src="/components/popover_detail/subtask.js"></script>
+<script src="/components/popover_detail/approve.js"></script>
+<script src="/components/popover_detail/note.js"></script>
+<script src="/components/popover_detail/trail.js"></script>
+<script src="/components/popover_detail/task_list.js"></script>
+<script src="/components/popover_detail/add_task.js"></script>
+<script src="/components/api_client.js"></script>
+<script src="/components/gantt/gantt_utils.js"></script>
+<script src="/components/gantt/gantt.js"></script>
+<script src="/components/gantt/exec_view.js"></script>
+<script src="/components/gantt/exec_filter.js"></script>
+<script src="/components/api_hooks.js"></script>
+
+<script>
+(function() {
+  var el = document.getElementById('ganttApp');
+  el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:14px">Đang tải...</div>';
+  fetch('/api/portfolio')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      el.innerHTML = '';
+      if (data && data.programs) {
+        data.programs.forEach(function(prg) {
+          (prg.projects || []).forEach(function(prj) {
+            (prj.phases || []).forEach(function(ph) {
+              (ph.workPackages || []).forEach(function(wp) {
+                (wp.tasks || []).forEach(function(t) {
+                  if (t.keyResult && !t.ketQuaChinh) t.ketQuaChinh = t.keyResult;
+                });
+              });
+            });
+          });
+        });
+      }
+      PMO.GanttChart.mount(el, data);
+      // Read view from URL path: /gantt/chien_luoc, /gantt/thuc_thi, etc.
+      var viewMap = {chien_luoc:'strategy', ke_hoach:'control', dieu_hanh:'operation', thuc_thi:'execution'};
+      var pathParts = window.location.pathname.split('/').filter(Boolean);
+      if (pathParts.length >= 2 && pathParts[0] === 'gantt') {
+        var urlView = viewMap[pathParts[1]];
+        if (urlView && urlView !== PMO.GanttChart.state.view) {
+          PMO.GanttChart._setView(urlView);
+        }
+      }
+    })
+    .catch(function(err) {
+      el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#c00;font-size:14px">Không thể tải dữ liệu</div>';
+    });
+})();
+</script>
+</body>
+</html>

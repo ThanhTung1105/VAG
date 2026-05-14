@@ -1,0 +1,21 @@
+<div class="sec" id="note_component">
+  <div class="sec-head"><span class="sec-title">Note / Note List / Note Input</span><span class="sec-id">popover_detail/note</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Chat-style: mới nhất dưới cùng, scroll mặc định ở cuối. Gửi = Enter hoặc click. Hover hiện sửa/xóa (chỉ chủ sở hữu). Shift+Enter xuống dòng.</p>
+  <div class="card" style="max-width:480px">
+    <div id="noteDemo"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var container = document.getElementById('noteDemo');
+  container.innerHTML = PMO.Note.renderList([
+    {id:'n1', author:'Anh LTD', time:'13/04/2026 09:15', content:'Chuẩn bị phòng họp tầng 3 nhé, kiểm tra mic trước 30 phút.', source:'Task: Lễ khởi động', isOwner:false},
+    {id:'n2', author:'Long NNL', time:'13/04/2026 10:30', content:'OK anh, em đã book phòng rồi. Sẽ test mic + projector lúc 13:30.', source:'Task: Lễ khởi động', isOwner:true},
+    {id:'n3', author:'Hà NTT', time:'13/04/2026 11:00', content:'Slide kick-off em đã gửi qua email, anh Long review giúp.', source:'Task: Lễ khởi động', isOwner:false},
+    {id:'n4', author:'Long NNL', time:'13/04/2026 14:20', content:'Đã review xong, có vài chỗ cần sửa:\n- Slide 3: thêm timeline tổng quan\n- Slide 7: cập nhật số liệu mới nhất\nEm gửi lại bản cập nhật trước 16h nhé.', source:'Task: Lễ khởi động', isOwner:true, edited:true},
+    {id:'n5', author:'Minh PT', time:'14/04/2026 08:00', content:'Citek confirm sẽ có 3 người tham dự buổi kick-off.', source:'WP: Khởi động dự án', isOwner:false},
+  ], {placeholder:'Nhập ghi chú...'});
+  PMO.Note.bind(container, {currentUser:'Long NNL', source:'Task: Lễ khởi động'});
+})();
+</script>

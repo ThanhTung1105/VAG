@@ -1,0 +1,411 @@
+═══════════════════════════════════════════════════════
+  VIETANH PMO — KẾ HOẠCH KIỂM THỬ CHỨC NĂNG
+  Version: 2026-05-14
+  Người viết: Long NNL
+  Đối tượng: Thực tập sinh QA
+═══════════════════════════════════════════════════════
+
+HƯỚNG DẪN CHUNG
+───────────────
+- Chạy: pip install -r requirements.txt (lần đầu)
+- Chạy: python seed.py --reset (mỗi khi đổi dữ liệu mẫu)
+- Chạy: python wsgi.py (mỗi khi chạy app)
+- Mở: http://localhost:5000
+- Đăng nhập: long.nnl@vietanh-group.com / admin
+- Ghi lại mỗi test case: ✅ Pass / ❌ Fail + mô tả lỗi + screenshot
+- Nếu fail → ghi rõ: bước nào fail, expected vs actual, console log (F12)
+- Test trên Chrome + Firefox
+
+
+═══════════════════════════════════════════════════════
+MODULE 1: ĐĂNG NHẬP & PHÂN QUYỀN
+═══════════════════════════════════════════════════════
+
+TC-1.1  Đăng nhập thành công
+        Bước: Nhập email/password đúng → click Đăng nhập
+        Kỳ vọng: Chuyển sang /gantt, sidebar hiện tên user
+        [ ] Pass / [ ] Fail
+
+TC-1.2  Đăng nhập sai password
+        Bước: Nhập email đúng, password sai
+        Kỳ vọng: Hiện thông báo lỗi, KHÔNG chuyển trang
+        [ ] Pass / [ ] Fail
+
+TC-1.3  Truy cập /gantt khi chưa login
+        Bước: Mở incognito → truy cập localhost:5000/gantt
+        Kỳ vọng: Redirect về /login
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 2: GANTT VIEWS — NAVIGATION
+═══════════════════════════════════════════════════════
+
+TC-2.1  Chuyển đổi 4 views
+        Bước: Click lần lượt Chiến lược → Kế hoạch → Điều hành → Thực thi
+        Kỳ vọng: 
+          - Mỗi view hiện đúng nội dung
+          - URL tự đổi (/gantt/chien_luoc, /gantt/ke_hoach, /gantt/dieu_hanh, /gantt/thuc_thi)
+          - Không lỗi console
+        [ ] Pass / [ ] Fail
+
+TC-2.2  Truy cập trực tiếp URL view
+        Bước: Gõ trực tiếp localhost:5000/gantt/thuc_thi vào thanh địa chỉ
+        Kỳ vọng: Mở đúng view Thực thi, KHÔNG 404
+        [ ] Pass / [ ] Fail
+
+TC-2.3  Share URL giữa các view
+        Bước: Ở view Kế hoạch, copy URL → mở tab mới dán vào
+        Kỳ vọng: Tab mới hiện đúng view Kế hoạch
+        [ ] Pass / [ ] Fail
+
+TC-2.4  View thực thi — tải CSS/JS đúng
+        Bước: Mở F12 Console, chuyển sang Thực thi
+        Kỳ vọng: KHÔNG có lỗi 404 cho bất kỳ file nào
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 3: VIEW THỰC THI — BẢNG DỮ LIỆU
+═══════════════════════════════════════════════════════
+
+TC-3.1  Hiển thị đầy đủ hierarchy
+        Bước: Chuyển sang Thực thi
+        Kỳ vọng:
+          - Tất cả cấp được expand sẵn (Program → Subtask)
+          - Phân cấp màu rõ ràng (xanh đậm → nhạt → trắng → xám)
+          - Indent gradient: lề trái trắng, nội dung bắt đầu từ màu cấp
+          - Grid dọc (border giữa các cột) rõ ràng
+        [ ] Pass / [ ] Fail
+
+TC-3.2  Collapse / Expand
+        Bước: Click mũi tên collapse ở 1 Program → expand lại
+        Kỳ vọng: Các cấp con ẩn/hiện đúng
+        [ ] Pass / [ ] Fail
+
+TC-3.3  Resize cột ngang
+        Bước: Kéo handle ở mép phải header cột "Tên"
+        Kỳ vọng: Cột rộng/hẹp theo, header + body sync chiều rộng
+        [ ] Pass / [ ] Fail
+
+TC-3.4  Resize chiều cao dòng
+        Bước: Di chuột xuống dưới cùng 1 dòng → kéo handle
+        Kỳ vọng: Dòng cao lên, nội dung bên trong không bị cắt
+        [ ] Pass / [ ] Fail
+
+TC-3.5  Click dòng → mở popover
+        Bước: Click vào 1 dòng Task
+        Kỳ vọng: Mở popover chi tiết với đầy đủ thông tin
+        [ ] Pass / [ ] Fail
+
+TC-3.6  Cột Tiến độ có màu sắc
+        Bước: Quan sát cột Tiến độ
+        Kỳ vọng:
+          - ≥80%: số xanh lá
+          - 40-79%: số vàng
+          - 1-39%: số xanh dương
+          - 0%: số xám
+          - Format: "80% xong · 60% duyệt"
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 4: CHECKBOX SUBTASK & APPROVE
+═══════════════════════════════════════════════════════
+
+TC-4.1  Tick checkbox subtask (unfinished → finished)
+        Bước: Tìm subtask có ☐ → click checkbox
+        Kỳ vọng:
+          - Checkbox chuyển tím ngay lập tức (không lag)
+          - Tên subtask đổi màu tím
+          - Cột Trạng thái đổi sang "Chờ duyệt"
+          - Cột Tiến độ của Task parent cập nhật (giảm nếu trước đó 100%)
+        [ ] Pass / [ ] Fail
+
+TC-4.2  Untick checkbox (finished → unfinished)
+        Bước: Click checkbox tím (finished)
+        Kỳ vọng:
+          - Checkbox trở lại ☐ trống ngay lập tức
+          - Tên subtask trở lại màu bình thường
+          - Trạng thái → "Chưa hoàn thành"
+        [ ] Pass / [ ] Fail
+
+TC-4.3  Approve subtask
+        Bước: Click chip "Chờ duyệt" (tím) của 1 subtask
+        Kỳ vọng:
+          - Hiện popover: "Duyệt" / "Từ chối"
+          - Click "Duyệt" → checkbox chuyển xanh lá, trạng thái "Đã duyệt"
+          - Cột "Hoàn thành lúc" hiện ngày hiện tại
+        [ ] Pass / [ ] Fail
+
+TC-4.4  Reject subtask
+        Bước: Click chip "Chờ duyệt" → "Từ chối"
+        Kỳ vọng:
+          - Subtask quay về "Chưa hoàn thành", checkbox trống
+          - "Hoàn thành lúc" trống
+        [ ] Pass / [ ] Fail
+
+TC-4.5  Approve tất cả subtask của task
+        Bước: Tìm Task có subtask "Chờ duyệt" → click chip trạng thái của TASK
+        Kỳ vọng:
+          - Popover: "Duyệt tất cả" / "Từ chối tất cả"
+          - Click "Duyệt tất cả" → tất cả subtask chờ duyệt → "Đã duyệt"
+          - Task status → "Hoàn thành", actual_finish hiện ngày
+        [ ] Pass / [ ] Fail
+
+TC-4.6  Actual finish lifecycle
+        Bước:
+          1. Từ task 100% approved (completed) → thêm 1 subtask mới
+          2. Kiểm tra task status + actual_finish
+          3. Finish + Approve subtask mới
+          4. Kiểm tra lại
+        Kỳ vọng:
+          Sau bước 1: task status ≠ completed, actual_finish = trống
+          Sau bước 3: task status = completed, actual_finish = ngày hôm nay
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 5: COLUMN FILTERS
+═══════════════════════════════════════════════════════
+
+TC-5.1  Text search tên
+        Bước: Gõ "kick" vào ô tìm kiếm cột Tên
+        Kỳ vọng:
+          - Chỉ hiện items có "kick" trong tên
+          - Parent items vẫn hiện (hierarchy-aware)
+          - Input KHÔNG bị mất chữ khi filter
+        [ ] Pass / [ ] Fail
+
+TC-5.2  Toggle "Có tôi" (PIC)
+        Bước: Click "Có tôi" ở cột PIC
+        Kỳ vọng:
+          - Chỉ hiện items có PIC là user hiện tại
+          - Click lại → tắt filter, hiện tất cả
+        [ ] Pass / [ ] Fail
+
+TC-5.3  Toggle "Tuần này" (Thời gian)
+        Bước: Click "Tuần này" ở cột Thời gian
+        Kỳ vọng: Chỉ hiện items có ngày nằm trong tuần hiện tại
+        [ ] Pass / [ ] Fail
+
+TC-5.4  Toggle "Hôm nay"
+        Bước: Click "Hôm nay" → rồi click "Tuần này"
+        Kỳ vọng: "Hôm nay" tắt, "Tuần này" bật (mutual exclusive)
+        [ ] Pass / [ ] Fail
+
+TC-5.5  Clear date filter
+        Bước: Khi đang filter "Tuần này" → click nút X nhỏ
+        Kỳ vọng: Filter xóa, hiện tất cả, nút X biến mất
+        [ ] Pass / [ ] Fail
+
+TC-5.6  Multi-select Status
+        Bước: Click icon filter ở header cột Trạng thái → chọn "Đang thực hiện"
+        Kỳ vọng:
+          - Dropdown checkbox hiện danh sách trạng thái
+          - Chỉ hiện items có trạng thái được chọn
+          - Click "Xóa lọc" → reset
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 6: MEMBER GROUPS
+═══════════════════════════════════════════════════════
+
+TC-6.1  Chọn group trong picker
+        Bước: Mở popover subtask → click "+ Thêm" ở Người thực hiện → chọn "Team IT"
+        Kỳ vọng:
+          - 3 thành viên (Long NNL, Hà NTT, Minh PT) được tự động chọn
+          - Hiện group chip cam [🟠TI Team IT] + member chips
+          - Trong dropdown, Team IT và 3 members đều checked
+        [ ] Pass / [ ] Fail
+
+TC-6.2  Bỏ tick group khi có group khác chọn
+        Bước: 
+          1. Chọn "Team IT" (Long, Hà, Minh)
+          2. Chọn "Ban Chiến Lược" (Long, Anh)
+          3. Bỏ tick "Team IT"
+        Kỳ vọng:
+          - Hà NTT, Minh PT bị xóa (chỉ thuộc Team IT)
+          - Long NNL vẫn còn (được bảo vệ bởi Ban Chiến Lược)
+          - Còn lại: [Ban Chiến Lược] + Long NNL + Anh LTD
+        [ ] Pass / [ ] Fail
+
+TC-6.3  Bỏ 1 member riêng lẻ → group uncheck
+        Bước: Chọn "Team IT" → bỏ tick "Minh PT" riêng
+        Kỳ vọng:
+          - Minh PT bị xóa
+          - Group "Team IT" tự uncheck (không còn "all in")
+          - Chip group "Team IT" biến mất, chỉ còn Long NNL + Hà NTT
+        [ ] Pass / [ ] Fail
+
+TC-6.4  Hover group chip → tooltip
+        Bước: Hover chuột vào group chip cam
+        Kỳ vọng:
+          - Tooltip hiện danh sách thành viên (avatar + tên)
+          - Tooltip nổi trên tất cả (KHÔNG bị cắt bởi overflow)
+        [ ] Pass / [ ] Fail
+
+TC-6.5  Click group avatar → popover thành viên
+        Bước: Click vào avatar tròn cam của group chip
+        Kỳ vọng:
+          - Popover hiện: tên nhóm, số thành viên, danh sách
+          - Popover đóng khi click ngoài
+        [ ] Pass / [ ] Fail
+
+TC-6.6  Lưu và reopen
+        Bước: Assign Team IT → Cập nhật → đóng popover → mở lại
+        Kỳ vọng:
+          - Người thực hiện hiện đúng group chip (cam) cho Team IT
+          - Mở picker → Team IT đã checked
+        [ ] Pass / [ ] Fail
+
+TC-6.7  Group chip trong view thực thi
+        Bước: Assign đủ thành viên của 1 group → kiểm tra cột Người thực hiện ở view Thực thi
+        Kỳ vọng:
+          - Hiện inline chip nhỏ gọn: [🟠TI Team IT] thay vì 3 chips riêng
+          - Hover cả ô → tooltip toàn bộ thành viên
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 7: POPOVER CHI TIẾT & DRAG REORDER
+═══════════════════════════════════════════════════════
+
+TC-7.1  Mở popover từ mỗi cấp
+        Bước: Click lần lượt Program, Project, Phase, WP, Task, Subtask
+        Kỳ vọng: Mỗi cấp mở popover đúng với các tab tương ứng
+        [ ] Pass / [ ] Fail
+
+TC-7.2  Tab Công việc — subtask card bo góc
+        Bước: Mở popover Task → tab Đầu việc
+        Kỳ vọng:
+          - Mỗi subtask là 1 card bo góc (border + border-radius)
+          - Có khoảng cách giữa các card
+          - Hover card → highlight nhẹ
+        [ ] Pass / [ ] Fail
+
+TC-7.3  Drag reorder task list
+        Bước: Mở popover Phase → tab Gói công việc → kéo drag handle (⠿)
+        Kỳ vọng:
+          - Handle ⠿ hiện khi hover
+          - Kéo → drop indicator (border xanh)
+          - Thả → thứ tự đổi
+          - Reload trang → thứ tự vẫn đúng (đã lưu DB)
+        [ ] Pass / [ ] Fail
+
+TC-7.4  Drag reorder subtask
+        Bước: Mở popover Task → tab Đầu việc → kéo subtask
+        Kỳ vọng: Tương tự TC-7.3, thứ tự lưu vào DB
+        [ ] Pass / [ ] Fail
+
+TC-7.5  Click task item KHÔNG navigate khi drag
+        Bước: Kéo 1 task item rồi thả lại vị trí cũ
+        Kỳ vọng: KHÔNG mở popover chi tiết (click bị skip khi drag)
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 8: RECALCULATION CASCADE
+═══════════════════════════════════════════════════════
+
+TC-8.1  Thêm subtask → recalc task
+        Bước: Mở Task đang 100%/100% → thêm subtask mới
+        Kỳ vọng:
+          - Task: pctFinished < 100%, status ≠ completed
+          - WP parent: pctFinished giảm tương ứng
+          - Cascade lên Phase → Project → Program
+        [ ] Pass / [ ] Fail
+
+TC-8.2  Xóa subtask → recalc
+        Bước: Xóa 1 subtask unfinished
+        Kỳ vọng: Task pctFinished tăng (ít subtask hơn)
+        [ ] Pass / [ ] Fail
+
+TC-8.3  Toggle finish → recalc
+        Bước: Toggle 1 subtask finished
+        Kỳ vọng: Task pctFinished tăng, cascade lên trên
+        [ ] Pass / [ ] Fail
+
+TC-8.4  Approve → recalc
+        Bước: Approve 1 subtask
+        Kỳ vọng: Task pctApproved tăng
+        [ ] Pass / [ ] Fail
+
+TC-8.5  So sánh giữa các views
+        Bước: Sau mỗi thay đổi subtask, kiểm tra cùng item ở cả 4 views
+        Kỳ vọng: Tiến độ, trạng thái, health ĐỒNG NHẤT ở tất cả views
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 9: MEMBER CHIPS & INLINE DISPLAY
+═══════════════════════════════════════════════════════
+
+TC-9.1  PIC/Approver hiện inline chip
+        Bước: Quan sát cột PIC và Approver ở view Thực thi
+        Kỳ vọng:
+          - Hiện dạng chip nhỏ: [🔵LN Long NNL] (border mỏng, avatar + tên)
+          - KHÔNG phải avatar tròn + text rời
+        [ ] Pass / [ ] Fail
+
+TC-9.2  Người thực hiện hiện chip gọn
+        Bước: Quan sát cột Người thực hiện
+        Kỳ vọng:
+          - Inline chips nhỏ gọn
+          - Group chip cam nếu tất cả members của group được assign
+          - 2 dòng tối đa, scroll ngang nếu quá dài
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 10: DATE & TIME
+═══════════════════════════════════════════════════════
+
+TC-10.1 Hiển thị ngày đúng format
+        Bước: Kiểm tra cột Thời gian và Hoàn thành lúc
+        Kỳ vọng: Format dd/mm/yyyy, center aligned
+        [ ] Pass / [ ] Fail
+
+TC-10.2 Hiển thị giờ khi có (showTime auto)
+        Bước: Sửa 1 subtask có giờ cụ thể (14:30) → kiểm tra
+        Kỳ vọng: Hiện "dd/mm/yyyy 14:30" (có giờ), không hiện "00:00"
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+MODULE 11: PERFORMANCE & UX
+═══════════════════════════════════════════════════════
+
+TC-11.1 Không console error
+        Bước: Mở F12 Console → thao tác tất cả chức năng
+        Kỳ vọng: KHÔNG có lỗi đỏ (TypeError, 404, etc.)
+        [ ] Pass / [ ] Fail
+
+TC-11.2 Optimistic UI — checkbox không lag
+        Bước: Click checkbox subtask
+        Kỳ vọng: Checkbox đổi màu NGAY LẬP TỨC (< 100ms), không đợi network
+        [ ] Pass / [ ] Fail
+
+TC-11.3 Sync giữa các views
+        Bước: Ở view Thực thi, tick checkbox → chuyển sang Điều hành
+        Kỳ vọng: Dữ liệu đã cập nhật ở view Điều hành
+        [ ] Pass / [ ] Fail
+
+TC-11.4 Auto-refresh
+        Bước: Mở 2 tab cùng trang → thay đổi ở tab 1
+        Kỳ vọng: Tab 2 tự cập nhật sau ~10s (polling sync)
+        [ ] Pass / [ ] Fail
+
+
+═══════════════════════════════════════════════════════
+KẾT QUẢ TỔNG HỢP
+═══════════════════════════════════════════════════════
+
+Tổng test cases: 40
+Pass:  ___
+Fail:  ___
+
+Người test: ___________________
+Ngày test:  ___________________
+Ghi chú:    ___________________

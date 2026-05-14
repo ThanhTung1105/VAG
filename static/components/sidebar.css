@@ -1,0 +1,108 @@
+/* ═══════════════════════════════════════════════════════
+   PMO Sidebar — Light theme, collapse ↔ expand on hover
+   Uses tokens.css variables for consistency with Gantt
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --sb-w: 48px;
+  --sb-exp: 240px;
+  --sb-ease: .22s cubic-bezier(.4,0,.2,1);
+}
+
+html { padding-left: var(--sb-w); }
+
+/* ── Shell ── */
+.pmo-sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sb-w); background: var(--bg-white, #fff);
+  display: flex; flex-direction: column;
+  z-index: 300; border-right: 1px solid var(--b-light, #e5e7eb);
+  overflow: hidden; transition: width var(--sb-ease);
+}
+.pmo-sidebar:hover {
+  width: var(--sb-exp);
+  box-shadow: 3px 0 16px rgba(0,0,0,.06);
+}
+
+/* ── Labels hidden when collapsed ── */
+.sb-label {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transition: opacity .12s; min-width: 0; flex: 1;
+}
+.pmo-sidebar:hover .sb-label { opacity: 1; }
+
+/* ── Profile ── */
+.sb-profile {
+  display: flex; align-items: center; gap: 10px;
+  height: 52px; padding: 0 8px; flex-shrink: 0;
+  border-bottom: 1px solid var(--b-light, #e5e7eb);
+}
+.sb-avatar {
+  width: 32px; height: 32px; min-width: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--brand, #0066B3), #3b82f6);
+  color: #fff; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.sb-username {
+  font-size: 12.5px; font-weight: 600; color: var(--t1, #111827);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sb-role {
+  font-size: 9.5px; color: var(--t3, #9ca3af); text-transform: uppercase;
+  letter-spacing: .04em; font-weight: 600;
+}
+
+/* ── Nav items ── */
+.sb-nav { flex: 1; padding: 8px 0; overflow-y: auto; overflow-x: hidden; }
+.sb-item {
+  display: flex; align-items: center; gap: 8px;
+  height: 38px; padding: 0 8px; margin: 1px 4px; border-radius: 8px;
+  color: var(--t3, #9ca3af); font-size: 12.5px; font-weight: 500;
+  cursor: pointer; text-decoration: none;
+  transition: background .1s, color .1s; position: relative;
+}
+.sb-item:hover { background: var(--bg-app, #f8f9fb); color: var(--t2, #4b5563); }
+.sb-item.active {
+  background: var(--brand-light, #e8f2fa); color: var(--brand, #0066B3); font-weight: 700;
+}
+.sb-item.active::before {
+  content: ''; position: absolute; left: -4px; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 16px; border-radius: 0 2px 2px 0;
+  background: var(--brand, #0066B3);
+}
+
+.sb-icon {
+  width: 32px; min-width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+.sb-icon svg {
+  width: 18px; height: 18px; stroke: currentColor; fill: none;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ── Divider ── */
+.sb-div { height: 1px; background: var(--b-light, #e5e7eb); margin: 6px 12px; }
+
+/* ── Bottom ── */
+.sb-bottom {
+  border-top: 1px solid var(--b-light, #e5e7eb);
+  padding: 4px 0 8px; flex-shrink: 0;
+}
+.sb-item.sb-logout { color: #dc2626; }
+.sb-item.sb-logout:hover { background: #fef2f2; color: #b91c1c; }
+
+/* ── Tooltip (collapsed only) ── */
+.sb-item[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute; left: calc(var(--sb-w) + 4px); top: 50%; transform: translateY(-50%);
+  background: var(--t1, #111827); color: #fff; font-size: 11px; font-weight: 500;
+  padding: 4px 10px; border-radius: 5px; white-space: nowrap;
+  pointer-events: none; box-shadow: 0 3px 10px rgba(0,0,0,.1);
+  opacity: 0; transition: opacity .1s; z-index: 310;
+}
+.pmo-sidebar:not(:hover) .sb-item[data-tip]:hover::after { opacity: 1; }
+
+/* ── Main content ── */
+.pmo-main {
+  position: fixed; top: 0; left: var(--sb-w); right: 0; bottom: 0;
+  display: flex; flex-direction: column; overflow: hidden;
+}

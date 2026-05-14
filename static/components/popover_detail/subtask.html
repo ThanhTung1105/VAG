@@ -1,0 +1,27 @@
+<div class="sec" id="subtask">
+  <div class="sec-head"><span class="sec-title">Subtask</span><span class="sec-id">popover_detail/subtask</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Checkbox + nội dung + assignee. Click checkbox = toggle finished. Click "Ghi chú" mở note inline. "+ Thêm đầu việc" để thêm mới.</p>
+  <div class="card" style="max-width:520px" id="subtaskDemo"></div>
+</div>
+<script>
+(function(){
+  var container = document.getElementById('subtaskDemo');
+  container.innerHTML = PMO.Subtask.renderList([
+    {id:'st1', content:'Lập danh sách đầu mối liên hệ', finishStatus:'approved', assignee:'Long NNL', notes:[
+      {id:'sn1', author:'Long NNL', time:'13/04 09:30', content:'Đã liên hệ 5/7 đầu mối', isOwner:true}
+    ]},
+    {id:'st2', content:'Chuẩn bị phòng họp kick-off', finishStatus:'finished', assignee:'Hà NTT', notes:[]},
+    {id:'st3', content:'Soạn agenda buổi kick-off', finishStatus:'finished', assignee:'Long NNL', notes:[
+      {id:'sn2', author:'Minh PT', time:'14/04 08:00', content:'Nên thêm phần Q&A 15 phút cuối', isOwner:false},
+      {id:'sn3', author:'Long NNL', time:'14/04 10:00', content:'OK, đã bổ sung', isOwner:true}
+    ]},
+    {id:'st4', content:'Xác định thành viên các team', finishStatus:'rejected', assignee:'Hà NTT', notes:[
+      {id:'sn4', author:'Approver', time:'14/04 15:00', content:'Từ chối: Thiếu thành viên phòng Kế toán, bổ sung lại.', source:'Phê duyệt', isOwner:false}
+    ]},
+    {id:'st5', content:'Kiểm tra âm thanh', finishStatus:'unfinished', assignee:'Hà NTT', notes:[]},
+    {id:'st6', content:'Kiểm tra đường truyền mạng', finishStatus:'unfinished', assignee:'Minh PT', notes:[]},
+  ]);
+  PMO.Subtask.bind(container, {currentUser:'Long NNL'});
+})();
+</script>

@@ -1,0 +1,70 @@
+<div class="sec" id="task_list">
+  <div class="sec-head"><span class="sec-title">Task List + Task Card</span><span class="sec-id">popover_detail/task_list</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Full list (WP popover) + compact card (Kanban). Dòng 1: tên+link+PIC. Dòng 2: exec+status+health+date. Dòng 3: bar+%.</p>
+  <div class="card" style="max-width:540px">
+    <div class="row-label">Full list (cho WP popover)</div>
+    <div id="taskListDemo"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Compact cards (cho Kanban, ~220px)</div>
+    <div id="taskCardDemo" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  document.getElementById('taskListDemo').innerHTML = PMO.TaskList.renderList([
+    {
+      id:'t1', name:'Xây dựng kế hoạch dự án, chuẩn bị CSVC',
+      execMode:'offline', status:'in_progress', health:'on_track',
+      pctFinished:80, pctApproved:60,
+      plannedStart:'13/04/2026 08:00', plannedFinish:'18/04/2026 17:30',
+      pic:'Long NNL', deliverableUrl:'https://drive.google.com/file/abc'
+    },
+    {
+      id:'t2', name:'Thành lập đội dự án',
+      execMode:'independent', status:'completed', health:'on_track',
+      pctFinished:100, pctApproved:100,
+      plannedStart:'10/04/2026', plannedFinish:'12/04/2026',
+      pic:'Hà NTT', deliverableUrl:'https://docs.google.com/doc/xyz'
+    },
+    {
+      id:'t3', name:'Lễ khởi động dự án',
+      execMode:'offline', status:'not_started', health:'on_track',
+      pctFinished:0, pctApproved:0,
+      plannedStart:'20/04/2026 09:00', plannedFinish:'20/04/2026 12:00',
+      pic:'Long NNL', deliverableUrl:''
+    },
+    {
+      id:'t4', name:'Đào tạo tổng quan SAP S/4HANA Cloud cho đội dự án',
+      execMode:'online', status:'in_progress', health:'at_risk',
+      pctFinished:40, pctApproved:20,
+      plannedStart:'21/04/2026', plannedFinish:'25/04/2026',
+      pic:'Minh PT', deliverableUrl:''
+    },
+    {
+      id:'t5', name:'Khảo sát quy trình as-is phòng Kế toán',
+      execMode:'site_visit', status:'in_progress', health:'behind_schedule',
+      pctFinished:30, pctApproved:10,
+      plannedStart:'15/04/2026 14:00', plannedFinish:'22/04/2026 17:00',
+      pic:'Citek Team', deliverableUrl:''
+    },
+  ], {showAdd: true});
+
+  // Kanban cards
+  var tasks = [
+    {id:'t1',name:'Xây dựng kế hoạch dự án',execMode:'offline',status:'in_progress',health:'on_track',pctFinished:80,pic:'Long NNL',plannedFinish:'18/04/2026'},
+    {id:'t2',name:'Thành lập đội dự án',execMode:'independent',status:'completed',health:'on_track',pctFinished:100,pic:'Hà NTT',plannedFinish:'12/04/2026'},
+    {id:'t4',name:'Đào tạo tổng quan SAP S/4HANA Cloud',execMode:'online',status:'in_progress',health:'at_risk',pctFinished:40,pic:'Minh PT',plannedFinish:'25/04/2026'},
+    {id:'t5',name:'Khảo sát quy trình as-is',execMode:'site_visit',status:'in_progress',health:'behind_schedule',pctFinished:30,pic:'Citek Team',plannedFinish:'22/04/2026'},
+  ];
+  var cardContainer = document.getElementById('taskCardDemo');
+  tasks.forEach(function(t) {
+    var div = document.createElement('div');
+    div.style.width = '220px';
+    div.innerHTML = PMO.TaskList.renderCard(t);
+    cardContainer.appendChild(div.firstElementChild);
+  });
+})();
+</script>

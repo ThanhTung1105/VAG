@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-add-task — Create new task popover
+   All layout from popover_shell.css. Only overrides here.
+   ═══════════════════════════════════════════════════════ */
+
+/* Title placeholder = black */
+.pmo-add-task .ph-title:empty::before {
+  content: 'Nhập tên task *';
+  color: var(--t1);
+  font-weight: 400;
+}
+
+/* Fields area — fixed, no scroll, padded */
+.pmo-add-task .at-fields {
+  flex-shrink: 0;
+  padding: 16px 22px 0;
+}
+
+/* Subtask section — takes remaining space */
+.pmo-add-task .at-subtask-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px;
+}
+
+/* Subtask scroll container — fills available space, scrolls independently */
+.pmo-add-task .at-subtask-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.pmo-add-task .at-subtask-scroll::-webkit-scrollbar { width: 4px; }
+.pmo-add-task .at-subtask-scroll::-webkit-scrollbar-track { background: transparent; }
+.pmo-add-task .at-subtask-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+
+/* Section divider between fields and subtasks */
+.pmo-at-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 8px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand);
+  border-top: 1px solid var(--b-light);
+}
+.pmo-at-section::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--b-light);
+}
+
+/* Create button disabled */
+.pmo-pop-actions .pa-btn.primary.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

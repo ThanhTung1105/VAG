@@ -1,0 +1,167 @@
+<div class="sec" id="date">
+  <div class="sec-head"><span class="sec-title">Date Display</span><span class="sec-id">common/misc</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Nhập text dd/mm/yyyy. Edit popover có toggles: + Giờ, + Ngày kết thúc, Hiển thị thứ. Range tự rút gọn thông minh.</p>
+
+  <div class="card">
+    <div class="row-label">Chỉ ngày</div>
+    <div class="row" id="d-dateonly"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Ngày + giờ</div>
+    <div class="row" id="d-datetime"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Hiển thị thứ</div>
+    <div class="row" id="d-weekday"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Editable — click để sửa, thử toggle "+ Giờ", "+ Ngày kết thúc", "Hiển thị thứ"</div>
+    <div class="row" id="d-editable"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Range — cùng tháng: 02→05 /01/2026</div>
+    <div class="row" id="d-r-samemo"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Range — cùng năm: 23/02→30/04 /2026</div>
+    <div class="row" id="d-r-sameyr"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Range — khác năm: full</div>
+    <div class="row" id="d-r-diffyr"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Range — cùng ngày + giờ: ngày trên, 9:45–17:30 dưới</div>
+    <div class="row" id="d-r-sameday"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Range — khác ngày + giờ: mỗi bên ngày trên giờ dưới</div>
+    <div class="row" id="d-r-diffday"></div>
+  </div>
+  <div class="card">
+    <div class="row-label">Range editable — click để sửa</div>
+    <div class="row" id="d-r-edit"></div>
+  </div>
+</div>
+
+<div class="sec" id="tooltip">
+  <div class="sec-head"><span class="sec-title">Tooltip</span><span class="sec-id">common/misc</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Fixed-position tooltip khi hover bar.</p>
+  <div class="card">
+    <div class="pmo-tooltip" style="display:block;position:relative;width:fit-content;pointer-events:auto">
+      <h4>Khởi động dự án</h4>
+      <div class="tt-row"><span class="tt-label">Trạng thái</span><span class="tt-val">Đang thực hiện</span></div>
+      <div class="tt-row"><span class="tt-label">Sức khỏe</span><span class="tt-val">Đúng tiến độ</span></div>
+      <div class="tt-row"><span class="tt-label">Kế hoạch</span><span class="tt-val">13/04 → 27/04/2026</span></div>
+      <div class="tt-row"><span class="tt-label">% Hoàn thành</span><span class="tt-val">80%</span></div>
+      <div class="tt-row"><span class="tt-label">% Phê duyệt</span><span class="tt-val">60%</span></div>
+      <div class="tt-row"><span class="tt-label">PIC</span><span class="tt-val">Long NNL</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="note">
+  <div class="sec-head"><span class="sec-title">Note Icon</span><span class="sec-id">common/misc</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Hover đổi màu brand.</p>
+  <div class="card">
+    <div class="row">
+      <svg class="pmo-note" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" title="Cần hoàn thành trước 27/04"><path d="M3.5 2.5h11a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 012 13V4a1.5 1.5 0 011.5-1.5z"/><path d="M5.5 6.5h7M5.5 9.5h4.5"/></svg>
+      <span style="font-size:11px;color:var(--t3)">← hover me</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="raiqd">
+  <div class="sec-head"><span class="sec-title">RAIQD Chip</span><span class="sec-id">common/misc</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Risk đỏ, Issue cam, Action xanh, Question tím, Decision hồng.</p>
+  <div class="card">
+    <div class="row">
+      <span class="pmo-raiqd risk">R-001</span>
+      <span class="pmo-raiqd issue">I-003</span>
+      <span class="pmo-raiqd action">A-012</span>
+      <span class="pmo-raiqd question">Q-005</span>
+      <span class="pmo-raiqd decision">D-002</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="phase_arrow">
+  <div class="sec-head"><span class="sec-title">Phase Arrow</span><span class="sec-id">common/misc</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">First = cạnh trái thẳng. Mid = chevron indent trái.</p>
+  <div class="card">
+    <div class="row" style="gap:0">
+      <span class="pmo-phase-arrow first" style="background:#0066B3;width:120px">Prepare</span>
+      <span class="pmo-phase-arrow mid" style="background:#3B82F6;width:140px">Explore</span>
+      <span class="pmo-phase-arrow mid" style="background:#06B6D4;width:130px">Realize</span>
+      <span class="pmo-phase-arrow mid" style="background:#8B5CF6;width:100px">Deploy</span>
+      <span class="pmo-phase-arrow mid" style="background:#10B981;width:90px">Run</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="textbox">
+  <div class="sec-head"><span class="sec-title">Text Box</span><span class="sec-id">common/misc</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Click để edit. Locked = chỉ đọc.</p>
+  <div class="card">
+    <div class="row">
+      <span class="pmo-textbox" contenteditable="true">Khởi động dự án</span>
+      &nbsp;
+      <span class="pmo-textbox locked">Locked — không sửa được</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Date only
+document.getElementById('d-dateonly').innerHTML =
+  PMO.Date.render('27/04/2026', {showTime:false}) + '&nbsp;&nbsp;&nbsp;' +
+  PMO.Date.render('25/04/2026', {showTime:false, overdue:true}) + '&nbsp;&nbsp;&nbsp;' +
+  PMO.Date.render(null);
+
+// Date + time
+document.getElementById('d-datetime').innerHTML =
+  PMO.Date.render('27/04/2026 17:00', {showTime:true}) + '&nbsp;&nbsp;&nbsp;' +
+  PMO.Date.render('25/04/2026 09:00', {showTime:true, overdue:true});
+
+// Weekday
+document.getElementById('d-weekday').innerHTML =
+  PMO.Date.render('09/03/2026', {showTime:false, showWeekday:true}) + '&nbsp;&nbsp;&nbsp;' +
+  PMO.Date.render('16/04/2026 14:30', {showTime:true, showWeekday:true});
+
+// Editable
+document.getElementById('d-editable').innerHTML =
+  PMO.Date.render('27/04/2026 17:00', {showTime:true, editable:true}) + '&nbsp;&nbsp;&nbsp;' +
+  PMO.Date.render('15/05/2026', {showTime:false, editable:true}) + '&nbsp;&nbsp;&nbsp;' +
+  PMO.Date.render('09/03/2026', {showTime:false, showWeekday:true, editable:true});
+
+// Range same month
+document.getElementById('d-r-samemo').innerHTML =
+  PMO.Date.renderRange('02/01/2026', '05/01/2026', {showTime:false});
+
+// Range same year
+document.getElementById('d-r-sameyr').innerHTML =
+  PMO.Date.renderRange('23/02/2026', '30/04/2026', {showTime:false});
+
+// Range diff year
+document.getElementById('d-r-diffyr').innerHTML =
+  PMO.Date.renderRange('15/11/2025', '20/03/2026', {showTime:false});
+
+// Range same day + time
+document.getElementById('d-r-sameday').innerHTML =
+  PMO.Date.renderRange('16/04/2026 09:45', '16/04/2026 17:30', {showTime:true});
+
+// Range diff day + time
+document.getElementById('d-r-diffday').innerHTML =
+  PMO.Date.renderRange('13/04/2026 08:00', '27/04/2026 17:30', {showTime:true});
+
+// Range editable
+document.getElementById('d-r-edit').innerHTML =
+  PMO.Date.renderRange('13/04/2026', '25/05/2026', {showTime:false, editable:true}) + '&nbsp;&nbsp;&nbsp;' +
+  PMO.Date.renderRange('16/04/2026 09:00', '16/04/2026 17:00', {showTime:true, editable:true});
+</script>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VietAnh PMO — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117; --bg2: #1a1d27; --bg3: #242835; --bg4: #2e3344;
+  --t1: #f0f1f4; --t2: #b0b3be; --t3: #6b7084;
+  --ac: #3b82f6; --ac2: #2563eb; --red: #ef4444; --grn: #22c55e; --ylw: #eab308;
+  --bdr: #2e3344; --radius: 6px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Nunito Sans',sans-serif; background:var(--bg); color:var(--t1); font-size:13px; }
+a { color:var(--ac); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* Layout */
+.admin-shell { display:flex; height:100vh; }
+.admin-sidebar { width:220px; background:var(--bg2); border-right:1px solid var(--bdr); display:flex; flex-direction:column; flex-shrink:0; }
+.admin-main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+/* Sidebar */
+.sb-header { padding:16px; border-bottom:1px solid var(--bdr); }
+.sb-header h1 { font-size:14px; font-weight:700; color:var(--ac); }
+.sb-header p { font-size:11px; color:var(--t3); margin-top:2px; }
+.sb-nav { flex:1; overflow-y:auto; padding:8px; }
+.sb-item { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-radius:var(--radius);
+  cursor:pointer; color:var(--t2); font-size:12px; transition:all .15s; }
+.sb-item:hover { background:var(--bg3); color:var(--t1); }
+.sb-item.active { background:var(--ac); color:#fff; }
+.sb-item .count { font-size:10px; background:var(--bg4); padding:1px 6px; border-radius:10px; }
+.sb-item.active .count { background:rgba(255,255,255,.2); }
+.sb-footer { padding:12px 16px; border-top:1px solid var(--bdr); }
+.sb-footer a { font-size:11px; color:var(--t3); }
+
+/* Main header */
+.main-header { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-bottom:1px solid var(--bdr); background:var(--bg2); }
+.main-header h2 { font-size:15px; font-weight:600; }
+.main-header .actions { display:flex; gap:8px; }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; gap:4px; padding:6px 14px; border:none; border-radius:var(--radius);
+  font-size:12px; font-weight:500; cursor:pointer; font-family:inherit; transition:all .15s; }
+.btn-primary { background:var(--ac); color:#fff; }
+.btn-primary:hover { background:var(--ac2); }
+.btn-danger { background:var(--red); color:#fff; }
+.btn-danger:hover { opacity:.85; }
+.btn-ghost { background:transparent; color:var(--t2); border:1px solid var(--bdr); }
+.btn-ghost:hover { background:var(--bg3); color:var(--t1); }
+.btn-sm { padding:4px 10px; font-size:11px; }
+
+/* Table */
+.table-wrap { flex:1; overflow:auto; }
+table { width:100%; border-collapse:collapse; }
+thead { position:sticky; top:0; z-index:2; }
+th { background:var(--bg3); padding:8px 12px; text-align:left; font-size:11px; font-weight:600; color:var(--t2);
+  border-bottom:1px solid var(--bdr); white-space:nowrap; cursor:pointer; user-select:none; }
+th:hover { color:var(--t1); }
+th .sort-icon { margin-left:4px; font-size:9px; }
+td { padding:6px 12px; border-bottom:1px solid var(--bg3); font-size:12px; color:var(--t1); max-width:250px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+tr:hover td { background:var(--bg3); }
+td.id-col { color:var(--t3); font-size:11px; }
+td.actions-col { white-space:nowrap; }
+
+/* Pagination */
+.pager { display:flex; align-items:center; justify-content:space-between; padding:10px 20px; border-top:1px solid var(--bdr); background:var(--bg2); }
+.pager-info { font-size:11px; color:var(--t3); }
+.pager-btns { display:flex; gap:4px; }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; z-index:100; }
+.modal { background:var(--bg2); border:1px solid var(--bdr); border-radius:8px; width:560px; max-height:80vh; display:flex; flex-direction:column; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--bdr); }
+.modal-header h3 { font-size:14px; font-weight:600; }
+.modal-close { background:none; border:none; color:var(--t3); font-size:18px; cursor:pointer; }
+.modal-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.modal-footer { display:flex; justify-content:flex-end; gap:8px; padding:12px 20px; border-top:1px solid var(--bdr); }
+
+/* Form */
+.form-group { margin-bottom:12px; }
+.form-group label { display:block; font-size:11px; font-weight:600; color:var(--t2); margin-bottom:4px; }
+.form-group input, .form-group textarea, .form-group select {
+  width:100%; padding:7px 10px; background:var(--bg); border:1px solid var(--bdr); border-radius:var(--radius);
+  color:var(--t1); font-size:12px; font-family:inherit; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline:none; border-color:var(--ac); }
+.form-group textarea { resize:vertical; min-height:60px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* Toast */
+.toast { position:fixed; bottom:20px; right:20px; padding:10px 18px; border-radius:var(--radius);
+  font-size:12px; color:#fff; z-index:200; animation:toastIn .3s ease; }
+.toast.success { background:var(--grn); }
+.toast.error { background:var(--red); }
+@keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+/* Empty state */
+.empty { display:flex; align-items:center; justify-content:center; height:200px; color:var(--t3); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="admin-shell">
+  <!-- Sidebar -->
+  <div class="admin-sidebar">
+    <div class="sb-header">
+      <h1>⬡ PMO Admin</h1>
+      <p>Quản trị dữ liệu</p>
+    </div>
+    <div class="sb-nav" id="sbNav"></div>
+    <div class="sb-footer"><a href="/">← Về Gantt Chart</a></div>
+  </div>
+
+  <!-- Main -->
+  <div class="admin-main">
+    <div class="main-header" id="mainHeader">
+      <h2>Chọn bảng từ menu bên trái</h2>
+      <div class="actions" id="headerActions"></div>
+    </div>
+    <div class="table-wrap" id="tableWrap">
+      <div class="empty">Chọn bảng dữ liệu để bắt đầu</div>
+    </div>
+    <div class="pager" id="pager" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Modal template -->
+<div id="modalRoot"></div>
+
+<script>
+(function() {
+  var API = '/api/admin';
+  var state = { table: null, meta: null, rows: [], page: 1, perPage: 50, total: 0, sort: 'id', order: 'desc', members: [] };
+
+  // ── Load tables list ──
+  function loadTables() {
+    fetch(API + '/tables').then(r => r.json()).then(data => {
+      var nav = document.getElementById('sbNav');
+      nav.innerHTML = '';
+      Object.keys(data).forEach(key => {
+        var t = data[key];
+        var el = document.createElement('div');
+        el.className = 'sb-item' + (state.table === key ? ' active' : '');
+        el.innerHTML = '<span>' + t.label + '</span><span class="count">' + t.count + '</span>';
+        el.addEventListener('click', () => selectTable(key));
+        nav.appendChild(el);
+      });
+    });
+  }
+
+  // ── Load members for FK dropdowns ──
+  function loadMembers() {
+    fetch(API + '/members/lookup').then(r => r.json()).then(data => { state.members = data; });
+  }
+
+  // ── Select table ──
+  function selectTable(key) {
+    state.table = key; state.page = 1; state.sort = 'id'; state.order = 'desc';
+    loadTables(); // refresh sidebar active
+    loadRows();
+  }
+
+  // ── Load rows ──
+  function loadRows() {
+    if (!state.table) return;
+    var url = API + '/' + state.table + '?page=' + state.page + '&per_page=' + state.perPage +
+      '&sort=' + state.sort + '&order=' + state.order;
+    fetch(url).then(r => r.json()).then(data => {
+      state.meta = data;
+      state.rows = data.rows;
+      state.total = data.total;
+      renderHeader();
+      renderTable();
+      renderPager();
+    });
+  }
+
+  // ── Render header ──
+  function renderHeader() {
+    var h = document.getElementById('mainHeader');
+    h.querySelector('h2').textContent = state.meta.label + ' (' + state.total + ' bản ghi)';
+    var acts = document.getElementById('headerActions');
+    acts.innerHTML = '<button class="btn btn-primary" id="btnAdd">+ Thêm mới</button>' +
+      '<button class="btn btn-ghost" onclick="location.reload()">↻ Làm mới</button>';
+    document.getElementById('btnAdd').addEventListener('click', () => openModal(null));
+  }
+
+  // ── Render table ──
+  function renderTable() {
+    var wrap = document.getElementById('tableWrap');
+    if (!state.rows.length) { wrap.innerHTML = '<div class="empty">Không có dữ liệu</div>'; return; }
+    var cols = state.meta.columns;
+    var h = '<table><thead><tr>';
+    cols.forEach(c => {
+      var icon = state.sort === c.name ? (state.order === 'asc' ? ' ▲' : ' ▼') : '';
+      h += '<th data-col="' + c.name + '">' + c.name + '<span class="sort-icon">' + icon + '</span></th>';
+    });
+    h += '<th style="width:80px">Thao tác</th></tr></thead><tbody>';
+    state.rows.forEach(row => {
+      h += '<tr>';
+      cols.forEach(c => {
+        var val = row[c.name];
+        var cls = c.primary_key ? ' class="id-col"' : '';
+        var display = val === null ? '<span style="color:var(--t3)">null</span>' : escHtml(String(val));
+        if (String(val).length > 60) display = escHtml(String(val).slice(0, 57)) + '…';
+        h += '<td' + cls + ' title="' + escAttr(String(val || '')) + '">' + display + '</td>';
+      });
+      h += '<td class="actions-col">' +
+        '<button class="btn btn-ghost btn-sm btn-edit" data-id="' + row.id + '">✎</button> ' +
+        '<button class="btn btn-danger btn-sm btn-del" data-id="' + row.id + '">✕</button>' +
+        '</td></tr>';
+    });
+    h += '</tbody></table>';
+    wrap.innerHTML = h;
+
+    // Sort
+    wrap.querySelectorAll('th[data-col]').forEach(th => {
+      th.addEventListener('click', () => {
+        var col = th.dataset.col;
+        if (state.sort === col) state.order = state.order === 'asc' ? 'desc' : 'asc';
+        else { state.sort = col; state.order = 'asc'; }
+        loadRows();
+      });
+    });
+
+    // Edit
+    wrap.querySelectorAll('.btn-edit').forEach(btn => {
+      btn.addEventListener('click', () => {
+        var row = state.rows.find(r => r.id == btn.dataset.id);
+        if (row) openModal(row);
+      });
+    });
+
+    // Delete
+    wrap.querySelectorAll('.btn-del').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!confirm('Xóa bản ghi #' + btn.dataset.id + '?')) return;
+        fetch(API + '/' + state.table + '/' + btn.dataset.id, { method: 'DELETE' })
+          .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+          .then(() => { toast('Đã xóa', 'success'); loadRows(); loadTables(); })
+          .catch(e => toast('Lỗi: ' + e.message, 'error'));
+      });
+    });
+  }
+
+  // ── Render pager ──
+  function renderPager() {
+    var pg = document.getElementById('pager');
+    pg.style.display = 'flex';
+    var totalPages = Math.ceil(state.total / state.perPage) || 1;
+    var info = 'Trang ' + state.page + '/' + totalPages + ' · ' + state.total + ' bản ghi';
+    var btns = '<button class="btn btn-ghost btn-sm" id="pgPrev" ' + (state.page <= 1 ? 'disabled' : '') + '>← Trước</button>' +
+      '<button class="btn btn-ghost btn-sm" id="pgNext" ' + (state.page >= totalPages ? 'disabled' : '') + '>Sau →</button>';
+    pg.innerHTML = '<span class="pager-info">' + info + '</span><div class="pager-btns">' + btns + '</div>';
+    document.getElementById('pgPrev').addEventListener('click', () => { if (state.page > 1) { state.page--; loadRows(); } });
+    document.getElementById('pgNext').addEventListener('click', () => { if (state.page < totalPages) { state.page++; loadRows(); } });
+  }
+
+  // ── Modal (Create / Edit) ──
+  function openModal(row) {
+    var isEdit = !!row;
+    var cols = state.meta.columns.filter(c => !c.primary_key);
+    var root = document.getElementById('modalRoot');
+
+    var h = '<div class="modal-overlay"><div class="modal">';
+    h += '<div class="modal-header"><h3>' + (isEdit ? 'Sửa #' + row.id : 'Thêm ' + state.meta.label) + '</h3><button class="modal-close">✕</button></div>';
+    h += '<div class="modal-body">';
+
+    cols.forEach(c => {
+      var val = isEdit ? (row[c.name] ?? '') : '';
+      var type = String(c.type).toUpperCase();
+      var isFk = c.name.endsWith('_id') && c.name !== 'id';
+      var isText = type.includes('TEXT');
+      var isDt = type.includes('DATETIME') || type.includes('DATE');
+      var isBool = type.includes('BOOL');
+      var isInt = type.includes('INT') && !isFk;
+
+      h += '<div class="form-group">';
+      h += '<label>' + c.name + (c.nullable ? '' : ' *') + ' <span style="color:var(--t3);font-weight:400">' + type + '</span></label>';
+
+      if (isFk && c.name.match(/member_id|pic_id|approver_id|assignee_id|author_id|actor_id|detected_by_id|decided_by_id|closed_by_id/)) {
+        h += '<select name="' + c.name + '"><option value="">— Chọn —</option>';
+        state.members.forEach(m => {
+          h += '<option value="' + m.id + '"' + (val == m.id ? ' selected' : '') + '>' + m.name + ' (#' + m.id + ')</option>';
+        });
+        h += '</select>';
+      } else if (isBool) {
+        h += '<select name="' + c.name + '"><option value="false"' + (!val ? ' selected' : '') + '>false</option><option value="true"' + (val ? ' selected' : '') + '>true</option></select>';
+      } else if (isText) {
+        h += '<textarea name="' + c.name + '">' + escHtml(String(val || '')) + '</textarea>';
+      } else if (isDt) {
+        var dtVal = val ? String(val).slice(0, 16) : '';
+        h += '<input type="datetime-local" name="' + c.name + '" value="' + dtVal + '">';
+      } else {
+        h += '<input type="' + (isInt ? 'number' : 'text') + '" name="' + c.name + '" value="' + escAttr(String(val || '')) + '">';
+      }
+      h += '</div>';
+    });
+
+    h += '</div>';
+    h += '<div class="modal-footer"><button class="btn btn-ghost modal-cancel">Hủy</button><button class="btn btn-primary modal-save">' + (isEdit ? 'Cập nhật' : 'Tạo mới') + '</button></div>';
+    h += '</div></div>';
+    root.innerHTML = h;
+
+    // Close
+    root.querySelector('.modal-close').addEventListener('click', () => { root.innerHTML = ''; });
+    root.querySelector('.modal-cancel').addEventListener('click', () => { root.innerHTML = ''; });
+    root.querySelector('.modal-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) root.innerHTML = ''; });
+
+    // Save
+    root.querySelector('.modal-save').addEventListener('click', () => {
+      var data = {};
+      cols.forEach(c => {
+        var el = root.querySelector('[name="' + c.name + '"]');
+        if (!el) return;
+        var v = el.value;
+        var type = String(c.type).toUpperCase();
+
+        if (c.name.endsWith('_id') && v === '') v = null;
+        else if (type.includes('BOOL')) v = v === 'true';
+        else if (type.includes('INT') && v !== '' && v !== null) v = parseInt(v);
+        else if ((type.includes('DATETIME') || type.includes('DATE')) && v === '') v = null;
+        else if (v === '' && c.nullable) v = null;
+
+        data[c.name] = v;
+      });
+
+      var url = API + '/' + state.table + (isEdit ? '/' + row.id : '');
+      var method = isEdit ? 'PUT' : 'POST';
+      fetch(url, { method: method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) })
+        .then(r => { if (!r.ok) return r.json().then(d => { throw new Error(d.error || r.statusText); }); return r.json(); })
+        .then(() => {
+          toast(isEdit ? 'Đã cập nhật' : 'Đã tạo mới', 'success');
+          root.innerHTML = '';
+          loadRows();
+          loadTables();
+        })
+        .catch(e => toast('Lỗi: ' + e.message, 'error'));
+    });
+  }
+
+  // ── Toast ──
+  function toast(msg, type) {
+    var el = document.createElement('div');
+    el.className = 'toast ' + (type || 'success');
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+
+  // ── Helpers ──
+  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s) { return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+  // ── Init ──
+  loadTables();
+  loadMembers();
+})();
+</script>
+</body>
+</html>

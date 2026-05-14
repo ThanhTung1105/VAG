@@ -1,0 +1,153 @@
+/* ═══ Execution View — Standalone ═══ */
+.exec-container { display:flex; flex-direction:column; flex:1; overflow:hidden; background:var(--bg-white,#fff); }
+
+/* Header */
+.exec-head { flex-shrink:0; overflow:hidden; border-bottom:2px solid var(--b-medium,#CBD5E1); background:var(--bg-app,#F8F9FB); }
+.exec-head-inner { display:flex; white-space:nowrap; }
+.exec-hcell { display:flex; align-items:center; padding:8px 8px; font-size:10px; font-weight:700; color:var(--t3,#9CA3AF); text-transform:uppercase; letter-spacing:.03em; position:relative; flex-shrink:0; user-select:none; border-right:1px solid #D0D5DC; }
+.exec-resize { position:absolute; right:-2px; top:0; bottom:0; width:5px; cursor:col-resize; z-index:1; }
+.exec-resize:hover { background:var(--brand,#0066B3); opacity:.3; }
+
+/* Scrollable body */
+.exec-scroll { flex:1; overflow:auto; }
+.exec-scroll::-webkit-scrollbar { width:6px; height:6px; }
+.exec-scroll::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:3px; }
+.exec-inner { }
+
+/* Rows */
+.exec-row { display:flex; cursor:pointer; transition:background .1s; }
+.exec-row:hover { background:var(--brand-light,#E8F2FA) !important; }
+
+/* ═══ Level hierarchy — 6 distinct levels ═══
+   Name cell: white indent area → level color via gradient
+   Other cells: level color background
+   Program → darkest, Task → white, Subtask → light grey */
+
+.exec-row.lv-program {
+  background: #B8D4EA;
+  border-top: 2.5px solid #0066B3;
+  font-weight: 700; font-size: 12.5px;
+}
+.exec-row.lv-project {
+  background: #CEDFEE;
+  border-top: 2px solid #7BAED4;
+  font-weight: 600; font-size: 12px;
+}
+.exec-row.lv-phase {
+  background: #DEEAF3;
+  border-top: 1.5px solid #A8C4DE;
+  font-weight: 600; font-size: 11.5px;
+}
+.exec-row.lv-wp {
+  background: #EBF1F7;
+  border-top: 1px solid #C8D6E3;
+  font-weight: 500; font-size: 11.5px;
+}
+.exec-row.lv-task {
+  background: #F5F7FA;
+  font-size: 11.5px;
+}
+.exec-row.lv-subtask {
+  background: #EDEEF1;
+  font-size: 11px;
+}
+.exec-row.lv-subtask .exec-cell {
+  color: var(--t2);
+  border-bottom-color: #DFE1E5;
+}
+
+/* Cells */
+.exec-cell { display:flex; align-items:center; gap:4px; padding:5px 8px; font-size:11.5px; color:var(--t1); border-bottom:1px solid #D9DEE4; border-right:1px solid #D9DEE4; flex-shrink:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; min-height:34px; }
+.exec-cell-name { font-size:12px; }
+
+/* Toggle + Level icon — reuse gantt styles (gantt-tog, gantt-li) */
+.exec-tog { background:none; border:none; cursor:pointer; padding:0; margin-right:2px; }
+
+/* Name text */
+.exec-name-text { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Member names */
+.exec-mname { font-size:10px; color:var(--t2); vertical-align:middle; margin-left:2px; }
+
+/* Key result */
+.exec-kr { font-size:10.5px; color:var(--t2); overflow:hidden; text-overflow:ellipsis; }
+
+/* Link + Notes */
+.exec-link { font-size:14px; text-decoration:none; }
+.exec-note-icon { font-size:13px; cursor:pointer; opacity:.4; }
+.exec-note-icon:hover { opacity:1; }
+
+/* WP level icon — additional */
+.gantt-li.wp-i { background:#93C5FD; font-size:7px; }
+.gantt-li.tk { background:#CBD5E1; font-size:7px; }
+
+/* Drag */
+.exec-row[draggable] { cursor:grab; }
+.exec-row[draggable]:active { cursor:grabbing; }
+
+/* Progress text */
+.exec-pct-text { font-size:10.5px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.exec-pct-label { font-size:9px; color:var(--t3); font-weight:400; }
+
+/* Assignees cell — full chips, 2-line wrap with horizontal scroll */
+.exec-assignee-wrap { width:100%; overflow-x:auto; overflow-y:hidden; }
+.exec-assignee-wrap::-webkit-scrollbar { height:3px; }
+.exec-assignee-wrap::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:2px; }
+.exec-assignee-wrap .pmo-chip-list { flex-wrap:wrap; max-height:52px; overflow:hidden; margin:0; padding:0; gap:3px; }
+.exec-assignee-wrap .pmo-chip { height:20px; font-size:10px; padding:1px 6px 1px 1px; }
+.exec-assignee-wrap .chip-av { width:16px; height:16px; font-size:7px; }
+.exec-assignee-wrap .pmo-chip-group { height:20px; font-size:10px; padding:1px 6px 1px 1px; }
+.exec-assignee-wrap .chip-grp-av { width:16px; height:16px; font-size:7px; }
+.exec-assignee-wrap .pmo-chip .chip-x, .exec-assignee-wrap .pmo-chip-group .chip-x { display:none; }
+
+/* Row height resize handle */
+.exec-row { position: relative; }
+.exec-row-resize {
+  position: absolute; left: 0; right: 0; bottom: -2px; height: 5px;
+  cursor: row-resize; z-index: 1;
+}
+.exec-row-resize:hover { background: var(--brand, #0066B3); opacity: .2; }
+
+/* ═══ Subtask checkbox in exec view ═══ */
+.exec-st-check {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid var(--t3, #9CA3AF);
+  cursor: pointer; flex-shrink: 0; margin-right: 4px;
+  transition: all .15s;
+}
+.exec-st-check svg { width: 10px; height: 10px; display: none; }
+.exec-st-check:hover { border-color: var(--brand); }
+/* Finished = purple */
+.exec-st-check.finished { background: var(--c-ir, #8B5CF6); border-color: var(--c-ir, #8B5CF6); }
+.exec-st-check.finished svg { display: block; stroke: #fff; }
+/* Approved = green */
+.exec-st-check.approved { background: var(--c-co, #16A34A); border-color: var(--c-co, #16A34A); }
+.exec-st-check.approved svg { display: block; stroke: #fff; }
+
+/* Subtask name color by status */
+.exec-st-finished { color: var(--c-ir, #8B5CF6) !important;  }
+.exec-st-approved { color: var(--c-co, #16A34A) !important;  }
+
+/* Status action — clickable chip wrapper */
+.exec-sts-action { cursor: pointer; }
+.exec-sts-action:hover { opacity: .8; }
+
+/* Approve/Reject popover */
+.exec-approve-pop {
+  background: var(--bg-white, #fff); border: 1px solid var(--b-light);
+  border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  min-width: 160px; overflow: hidden;
+  animation: efd-in .12s ease-out;
+}
+.eap-item {
+  padding: 8px 14px; font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: background .1s;
+}
+.eap-item:hover { background: var(--bg-app); }
+.eap-approve { color: var(--c-co, #16A34A); font-weight: 600; }
+.eap-reject { color: var(--c-bs, #DC2626); font-weight: 600; }
+
+/* Level emoji icon */
+.exec-level-icon { font-size: 12px; margin-right: 3px; flex-shrink: 0; }

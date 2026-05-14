@@ -1,0 +1,19 @@
+/* pmo-chip-dd — dropdown fixed on body */
+.pmo-chip-dd{position:fixed;min-width:150px;background:var(--bg-white);border:1px solid var(--b-light);border-radius:8px;box-shadow:var(--shadow-lg);z-index:9999;padding:4px 0}
+.pmo-chip-dd .dd-item{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:12px}
+.pmo-chip-dd .dd-item:hover{background:var(--bg-app)}
+.pmo-chip-dd .dd-item.active{font-weight:600}
+.pmo-chip-dd .dd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.chip-arrow{width:12px;height:12px;flex-shrink:0;opacity:.6}
+
+/* pmo-status */
+.pmo-status{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:500;white-space:nowrap;height:22px;line-height:1;cursor:default}
+.pmo-status.s-ns{background:var(--c-ns-bg);color:var(--c-ns)}
+.pmo-status.s-ip{background:var(--c-ip-bg);color:var(--c-ip)}
+.pmo-status.s-ir{background:var(--c-ir-bg);color:var(--c-ir)}
+.pmo-status.s-co{background:var(--c-co-bg);color:var(--c-co)}
+.pmo-status.s-ca{background:var(--c-ns-bg);color:var(--c-ca)}
+.pmo-status.h-ar{background:var(--c-ar-bg);color:#92400E}
+.pmo-status.h-bs{background:var(--c-bs-bg);color:var(--c-bs)}
+.pmo-status.editable{cursor:pointer;padding-right:6px}
+.pmo-status.editable:hover{filter:brightness(.95)}

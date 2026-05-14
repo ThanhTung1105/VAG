@@ -1,0 +1,32 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-avatar — Avatar & Avatar Group
+   Single: <span class="pmo-avatar">LN</span>
+   Small:  <span class="pmo-avatar sm">LN</span>
+   Group:  <span class="pmo-avatar-group">
+             <span class="pmo-avatar">LN</span>
+             <span class="pmo-avatar more">+3</span>
+           </span>
+   ═══════════════════════════════════════════════════════ */
+.pmo-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--brand-light);
+  color: var(--brand);
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid var(--bg-white);
+  cursor: default;
+}
+.pmo-avatar.sm { width: 22px; height: 22px; font-size: 9px; border-width: 1.5px; }
+
+.pmo-avatar-group { display: inline-flex; align-items: center; }
+.pmo-avatar-group .pmo-avatar + .pmo-avatar { margin-left: -8px; }
+.pmo-avatar-group .pmo-avatar.sm + .pmo-avatar.sm { margin-left: -6px; }
+.pmo-avatar.more { background: #F3F4F6; color: var(--t3); font-size: 9px; }
+
+/* Group avatar — colored background */
+.pmo-av-grp { cursor: pointer; }

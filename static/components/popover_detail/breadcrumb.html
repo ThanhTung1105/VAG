@@ -1,0 +1,25 @@
+<div class="sec" id="breadcrumb">
+  <div class="sec-head"><span class="sec-title">Breadcrumb</span><span class="sec-id">popover_detail/breadcrumb</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Đường dẫn phân cấp trong header popover. Click segment để mở popover cấp đó.</p>
+  <div class="card" id="bcDemo1"></div>
+  <div class="card" id="bcDemo2"></div>
+</div>
+<script>
+document.getElementById('bcDemo1').innerHTML =
+  '<div class="row-label">Task level</div>' +
+  PMO.Breadcrumb.render([
+    {label:'Chuyển đổi số', level:'program', id:'prg1'},
+    {label:'SAP S/4HANA', level:'project', id:'prj1'},
+    {label:'Prepare', level:'phase', id:'ph1'},
+    {label:'Khởi động dự án', level:'wp', id:'wp1'},
+    {label:'Xây dựng kế hoạch dự án', level:'task', id:'t1'}
+  ]);
+document.getElementById('bcDemo2').innerHTML =
+  '<div class="row-label">Phase level</div>' +
+  PMO.Breadcrumb.render([
+    {label:'Chuyển đổi số', level:'program', id:'prg1'},
+    {label:'Microsoft 365', level:'project', id:'prj2'},
+    {label:'Onboard', level:'phase', id:'ph7'}
+  ]);
+</script>

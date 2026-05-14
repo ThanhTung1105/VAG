@@ -1,0 +1,40 @@
+<div class="sec" id="status_chip">
+  <div class="sec-head"><span class="sec-title">Status Chip</span><span class="sec-id">common/status_chip</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Pill màu theo status. Health override đổi màu chip. Editable: mũi tên dropdown.</p>
+  <div class="card">
+    <div class="row">
+      <div class="row-label">Read-only</div>
+      <span class="pmo-status s-ns">Chưa bắt đầu</span>
+      <span class="pmo-status s-ip">Đang thực hiện</span>
+      <span class="pmo-status s-ir">Chờ duyệt</span>
+      <span class="pmo-status s-co">Hoàn thành</span>
+      <span class="pmo-status s-ca">Đã hủy</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="row">
+      <div class="row-label">Health override</div>
+      <span class="pmo-status s-ip h-ar">Đang thực hiện</span>
+      <span class="pmo-status s-ir h-bs">Chờ duyệt</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row-label">Editable — click để chọn status</div>
+    <div class="row" id="statusEditable"></div>
+  </div>
+  <div class="card" id="statusChipJs"></div>
+</div>
+<script>
+document.getElementById('statusEditable').innerHTML =
+  PMO.StatusChip.render('in_progress', 'on_track', {editable:true}) + ' ' +
+  PMO.StatusChip.render('not_started', 'at_risk', {editable:true}) + ' ' +
+  PMO.StatusChip.render('completed', 'on_track', {editable:true});
+
+document.getElementById('statusChipJs').innerHTML =
+  '<div class="row-label">JS-rendered (read-only)</div><div class="row">' +
+  PMO.StatusChip.render('in_progress', 'on_track') + ' ' +
+  PMO.StatusChip.render('in_review', 'at_risk') + ' ' +
+  PMO.StatusChip.render('completed', 'on_track') + ' ' +
+  PMO.StatusChip.render('not_started', 'behind_schedule') +
+  '</div>';
+</script>

@@ -1,0 +1,21 @@
+<div class="sec" id="bar">
+  <div class="sec-head"><span class="sec-title">Progress Bar</span><span class="sec-id">common/bar</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">3 lớp: đáy (health nhạt) → %finished (vừa) → %approved (đậm). Overdue = hatch đỏ riêng.</p>
+  <div class="card" id="barDemo"></div>
+</div>
+<script>
+document.getElementById('barDemo').innerHTML =
+  '<div class="row-label">On track — 60% finished, 40% approved</div>' +
+  '<div style="width:80%;margin:8px 0">' + PMO.Bar.render({pctFinished:60,pctApproved:40,health:'on_track'}) + '</div>' +
+  '<div class="row-label">At risk — 80% finished, 20% approved</div>' +
+  '<div style="width:80%;margin:8px 0">' + PMO.Bar.render({pctFinished:80,pctApproved:20,health:'at_risk'}) + '</div>' +
+  '<div class="row-label">Behind schedule — đang làm, quá hạn 25%</div>' +
+  '<div style="width:100%;margin:8px 0">' + PMO.Bar.render({pctFinished:60,pctApproved:30,health:'behind_schedule',overdueRatio:0.25}) + '</div>' +
+  '<div class="row-label">Completed đúng hạn — 100% approved, xanh lá</div>' +
+  '<div style="width:80%;margin:8px 0">' + PMO.Bar.render({pctFinished:100,pctApproved:100,health:'on_track',status:'completed'}) + '</div>' +
+  '<div class="row-label">Completed nhưng chậm — xanh lá + hatch đỏ</div>' +
+  '<div style="width:100%;margin:8px 0">' + PMO.Bar.render({pctFinished:100,pctApproved:100,status:'completed',overdueRatio:0.2}) + '</div>' +
+  '<div class="row-label">Cancelled — xám + hatch xám</div>' +
+  '<div style="width:60%;margin:8px 0">' + PMO.Bar.render({pctFinished:30,pctApproved:10,status:'cancelled'}) + '</div>';
+</script>

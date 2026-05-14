@@ -1,0 +1,166 @@
+<div class="sec" id="chip_member">
+  <div class="sec-head"><span class="sec-title">Chip Member</span><span class="sec-id">common/chip_member</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Hover hiện ×. Click × xóa. Có 2 kiểu: đơn giản (chỉ tên) và có chức danh (tên + role). Chip list giới hạn 3 dòng mặc định, scroll dọc.</p>
+  <div class="card">
+    <div class="row"><div class="row-label">Chip đơn giản (hover for ×)</div>
+      <span class="pmo-chip"><span class="chip-av">LN</span>Long NNL<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+      <span class="pmo-chip"><span class="chip-av">HN</span>Hà NTT<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+      <span class="pmo-chip"><span class="chip-av">MP</span>Minh PT<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+    </div>
+    <div class="spacer"></div>
+    <div class="row"><div class="row-label">Chip có chức danh (name + role)</div>
+      <span class="pmo-chip has-role"><span class="chip-av">LN</span><span class="chip-info"><span class="chip-name">Long NNL</span><span class="chip-role">BI Analyst — Ban Chiến Lược</span></span><span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+      <span class="pmo-chip has-role"><span class="chip-av">AL</span><span class="chip-info"><span class="chip-name">Anh LTD</span><span class="chip-role">Giám đốc điều hành</span></span><span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+      <span class="pmo-chip has-role"><span class="chip-av">CT</span><span class="chip-info"><span class="chip-name">Citek Team</span><span class="chip-role">Đối tác triển khai SAP</span></span><span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+    </div>
+    <div class="spacer"></div>
+    <div class="row"><div class="row-label">Chip list — mặc định 3 dòng, scroll dọc (thử scroll ↓)</div>
+      <div class="pmo-chip-list" style="max-width:400px">
+        <span class="pmo-chip"><span class="chip-av">LN</span>Long NNL<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">HN</span>Hà NTT<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">MP</span>Minh PT<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">AL</span>Anh LTD<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">CT</span>Citek Team<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">DN</span>Dũng NV<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">TL</span>Trang LH<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">PK</span>Phòng Kế hoạch<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">PH</span>Phòng HC<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <button class="pmo-chip-add">+ Thêm</button>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="row"><div class="row-label">Chip list — giới hạn 2 dòng (class lines-2)</div>
+      <div class="pmo-chip-list lines-2" style="max-width:400px">
+        <span class="pmo-chip"><span class="chip-av">LN</span>Long NNL<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">HN</span>Hà NTT<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">MP</span>Minh PT<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">AL</span>Anh LTD<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">CT</span>Citek Team<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <span class="pmo-chip"><span class="chip-av">DN</span>Dũng NV<span class="chip-x" onclick="this.parentElement.remove()">×</span></span>
+        <button class="pmo-chip-add">+ Thêm</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="chipMemberJs"></div>
+</div>
+
+<div class="sec" id="assign_member">
+  <div class="sec-head"><span class="sec-title">Assign Member — Interactive Playground</span><span class="sec-id">common/assign_member + chip_member</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Mô phỏng đầy đủ luồng: click "+ Thêm" → popover mở → gõ ≥1 ký tự → nút "Thêm" hiện → free-type hoặc chọn từ danh sách.</p>
+
+  <!-- Multiple-choice -->
+  <div class="card">
+    <div class="row-label">Multiple-choice — Assignees</div>
+    <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Click "+ Thêm" để mở. Gõ ≥1 ký tự → nút "Thêm" hiện ra. Hoặc tick chọn từ danh sách.</p>
+    <div class="playground" id="pg-multi" style="position:relative">
+      <div class="pmo-chip-list" id="pg-multi-chips">
+        <button class="pmo-chip-add" id="pg-multi-btn">+ Thêm</button>
+      </div>
+      <div class="pmo-popover" id="pg-multi-pop">
+        <div class="pmo-popover-search">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--t3)" stroke-width="1.5" style="flex-shrink:0"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+          <input id="pg-multi-input" placeholder="Tìm hoặc nhập tên mới..." autocomplete="off">
+          <button class="pop-add-btn" id="pg-multi-freebtn" style="display:none">Thêm</button>
+        </div>
+        <div class="pmo-popover-list" id="pg-multi-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Single-choice -->
+  <div class="card">
+    <div class="row-label">Single-choice — PIC</div>
+    <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Chọn 1 người. Click vào chip để đổi.</p>
+    <div class="playground" id="pg-single" style="position:relative">
+      <div id="pg-single-chips">
+        <button class="pmo-chip-add" id="pg-single-btn">Chọn PIC</button>
+      </div>
+      <div class="pmo-popover single" id="pg-single-pop">
+        <div class="pmo-popover-search">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--t3)" stroke-width="1.5" style="flex-shrink:0"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+          <input id="pg-single-input" placeholder="Tìm PIC..." autocomplete="off">
+          <button class="pop-add-btn" id="pg-single-freebtn" style="display:none">Thêm</button>
+        </div>
+        <div class="pmo-popover-list" id="pg-single-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Free-type -->
+  <div class="card">
+    <div class="row-label">Free-type — Nhập tự do</div>
+    <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Gõ bất kỳ tên nào, nhấn "Thêm" hoặc Enter.</p>
+    <div class="playground" id="pg-free" style="position:relative">
+      <div class="pmo-chip-list" id="pg-free-chips">
+        <button class="pmo-chip-add" id="pg-free-btn">+ Thêm</button>
+      </div>
+      <div class="pmo-popover" id="pg-free-pop">
+        <div class="pmo-popover-search">
+          <input id="pg-free-input" placeholder="Nhập tên bất kỳ..." autocomplete="off">
+          <button class="pop-add-btn" id="pg-free-freebtn" style="display:none">Thêm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+const MEMBERS = [
+  {id:'m1',name:'Long NNL'},{id:'m2',name:'Hà NTT'},{id:'m3',name:'Minh PT'},
+  {id:'m4',name:'Anh LTD'},{id:'m5',name:'Citek Team'},{id:'m6',name:'Dũng NV'},{id:'m7',name:'Trang LH'},
+];
+function ini(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+function makeChip(name,onRm){const el=document.createElement('span');el.className='pmo-chip';el.dataset.name=name;el.innerHTML=`<span class="chip-av">${ini(name)}</span>${name}<span class="chip-x">×</span>`;el.querySelector('.chip-x').addEventListener('click',e=>{e.stopPropagation();el.remove();if(onRm)onRm(name);});return el;}
+function setupPopToggle(btn,pop,inp){btn.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.pmo-popover.open').forEach(p=>{if(p!==pop)p.classList.remove('open');});pop.classList.toggle('open');if(pop.classList.contains('open')&&inp){inp.value='';inp.focus();inp.dispatchEvent(new Event('input'));}});document.addEventListener('click',e=>{if(!pop.contains(e.target)&&e.target!==btn&&!btn.contains(e.target))pop.classList.remove('open');});pop.addEventListener('click',e=>e.stopPropagation());}
+function setupFree(inp,btn,onAdd){inp.addEventListener('input',()=>{btn.style.display=inp.value.trim().length>=1?'':'none';});btn.addEventListener('click',()=>{const v=inp.value.trim();if(v){onAdd(v);inp.value='';btn.style.display='none';}});inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();btn.click();}});}
+function renderList(el,members,sel,mode,onTog){el.innerHTML='';members.forEach(m=>{const it=document.createElement('div');it.className='pmo-popover-item'+(sel.has(m.id)?' selected':'');it.dataset.id=m.id;it.dataset.name=m.name;it.innerHTML=`<span class="pi-check">✓</span><span class="pmo-avatar sm">${ini(m.name)}</span>${m.name}`;it.addEventListener('click',()=>onTog(m,it));el.appendChild(it);});}
+function setupFilter(inp,list){inp.addEventListener('input',()=>{const q=inp.value.toLowerCase();list.querySelectorAll('.pmo-popover-item').forEach(i=>{i.style.display=(i.dataset.name||'').toLowerCase().includes(q)?'':'none';});});}
+
+// Multi
+(function(){const cE=document.getElementById('pg-multi-chips'),bE=document.getElementById('pg-multi-btn'),pE=document.getElementById('pg-multi-pop'),iE=document.getElementById('pg-multi-input'),fE=document.getElementById('pg-multi-freebtn'),lE=document.getElementById('pg-multi-list'),sel=new Set();
+function refresh(){cE.querySelectorAll('.pmo-chip').forEach(c=>c.remove());sel.forEach(id=>{const m=MEMBERS.find(x=>x.id===id);const n=m?m.name:id;const c=makeChip(n,()=>{sel.delete(id);refresh();sync();});cE.insertBefore(c,bE);});}
+function sync(){lE.querySelectorAll('.pmo-popover-item').forEach(i=>i.classList.toggle('selected',sel.has(i.dataset.id)));}
+renderList(lE,MEMBERS,sel,'multi',(m,it)=>{if(sel.has(m.id))sel.delete(m.id);else sel.add(m.id);it.classList.toggle('selected');refresh();});
+setupPopToggle(bE,pE,iE);setupFilter(iE,lE);
+setupFree(iE,fE,v=>{const cid='c_'+v.replace(/\s+/g,'_');if(!sel.has(cid)){MEMBERS.push({id:cid,name:v});sel.add(cid);renderList(lE,MEMBERS,sel,'multi',(m,it)=>{if(sel.has(m.id))sel.delete(m.id);else sel.add(m.id);it.classList.toggle('selected');refresh();});refresh();}});
+})();
+
+// Single
+(function(){const cE=document.getElementById('pg-single-chips'),bE=document.getElementById('pg-single-btn'),pE=document.getElementById('pg-single-pop'),iE=document.getElementById('pg-single-input'),fE=document.getElementById('pg-single-freebtn'),lE=document.getElementById('pg-single-list');let sid=null;
+function refresh(){cE.innerHTML='';if(sid){const m=MEMBERS.find(x=>x.id===sid);const n=m?m.name:sid;const c=makeChip(n,()=>{sid=null;refresh();sync();});c.style.cursor='pointer';c.addEventListener('click',e=>{if(e.target.closest('.chip-x'))return;pE.classList.toggle('open');if(pE.classList.contains('open')){iE.value='';iE.focus();}});cE.appendChild(c);}else{const b=document.createElement('button');b.className='pmo-chip-add';b.textContent='Chọn PIC';b.addEventListener('click',e=>{e.stopPropagation();pE.classList.toggle('open');if(pE.classList.contains('open')){iE.value='';iE.focus();}});cE.appendChild(b);}}
+function sync(){lE.querySelectorAll('.pmo-popover-item').forEach(i=>i.classList.toggle('selected',i.dataset.id===sid));}
+renderList(lE,MEMBERS,new Set(),'single',(m)=>{sid=m.id;sync();refresh();pE.classList.remove('open');});
+bE.addEventListener('click',e=>{e.stopPropagation();pE.classList.toggle('open');if(pE.classList.contains('open')){iE.value='';iE.focus();}});
+document.addEventListener('click',e=>{if(!pE.contains(e.target)&&!cE.contains(e.target))pE.classList.remove('open');});
+pE.addEventListener('click',e=>e.stopPropagation());setupFilter(iE,lE);
+setupFree(iE,fE,v=>{const cid='c_'+v.replace(/\s+/g,'_');MEMBERS.push({id:cid,name:v});sid=cid;renderList(lE,MEMBERS,new Set([cid]),'single',(m)=>{sid=m.id;sync();refresh();pE.classList.remove('open');});refresh();pE.classList.remove('open');});
+})();
+
+// Free
+(function(){const cE=document.getElementById('pg-free-chips'),bE=document.getElementById('pg-free-btn'),pE=document.getElementById('pg-free-pop'),iE=document.getElementById('pg-free-input'),fE=document.getElementById('pg-free-freebtn'),names=new Set();
+function refresh(){cE.querySelectorAll('.pmo-chip').forEach(c=>c.remove());names.forEach(n=>{const c=makeChip(n,()=>{names.delete(n);refresh();});cE.insertBefore(c,bE);});}
+setupPopToggle(bE,pE,iE);setupFree(iE,fE,v=>{if(!names.has(v)){names.add(v);refresh();}iE.focus();});
+})();
+})();
+
+// JS-rendered demos
+const jsEl = document.getElementById('chipMemberJs');
+if (jsEl) {
+  jsEl.innerHTML =
+    '<div class="row-label">JS-rendered: renderWithRole</div><div class="row">' +
+    PMO.ChipMember.renderWithRole('Long NNL', 'BI Analyst — Ban Chiến Lược') + ' ' +
+    PMO.ChipMember.renderWithRole('Anh LTD', 'Giám đốc điều hành') +
+    '</div>' +
+    '<div class="spacer"></div>' +
+    '<div class="row-label">JS-rendered: renderList (maxLines: 2, width 360px)</div>' +
+    '<div style="max-width:360px">' +
+    PMO.ChipMember.renderList([
+      {name:'Long NNL',role:'BI Analyst'}, {name:'Hà NTT',role:'Admin'}, {name:'Minh PT',role:'IT'},
+      {name:'Citek Team',role:'Đối tác SAP'}, {name:'Dũng NV',role:'Kế toán'}, {name:'Trang LH',role:'Nhân sự'}
+    ], {maxLines:2, showAdd:true}) +
+    '</div>';
+}
+</script>

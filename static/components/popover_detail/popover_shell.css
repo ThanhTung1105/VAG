@@ -1,0 +1,205 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-popover-shell — Detail popover container
+   Fixed height, centered, layered visual hierarchy
+   ═══════════════════════════════════════════════════════ */
+
+/* Overlay */
+.pmo-pop-overlay {
+  position: fixed; inset: 0;
+  background: rgba(17,24,39,0.4);
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+@media (max-width: 600px) { .pmo-pop-overlay { padding: 0; } }
+
+/* Shell — FIXED height, centered */
+.pmo-pop {
+  width: 100%; max-width: 600px;
+  height: 85vh;
+  background: var(--bg-app);
+  border-radius: 14px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.05);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+@media (max-width: 600px) {
+  .pmo-pop { max-width: 100%; height: 100vh; border-radius: 0; }
+}
+
+/* ── Header zone ── */
+.pmo-pop-header {
+  background: linear-gradient(180deg, #EBF2FA 0%, #F0F4F9 100%);
+  padding: 16px 22px 0;
+  flex-shrink: 0;
+  position: relative;
+  border-bottom: 1px solid rgba(0,102,179,0.08);
+}
+
+/* Close */
+.pmo-pop-close {
+  position: absolute; top: 12px; right: 14px;
+  width: 26px; height: 26px;
+  border: none; background: rgba(255,255,255,0.65);
+  border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t3); font-size: 13px;
+  transition: all .12s; z-index: 5;
+  backdrop-filter: blur(4px);
+}
+.pmo-pop-close:hover { background: rgba(255,255,255,0.95); color: var(--t1); }
+
+/* Breadcrumb */
+.pmo-pop-header .ph-breadcrumb { margin-bottom: 8px; padding-right: 36px; }
+.pmo-pop-header .ph-breadcrumb .pmo-breadcrumb { font-size: 11px; }
+
+/* Level bar + Title */
+.pmo-pop-header .ph-title-row {
+  display: flex; align-items: flex-start; gap: 0; margin-bottom: 4px;
+}
+.pmo-pop-header .ph-level-bar {
+  width: 4px; flex-shrink: 0; border-radius: 2px;
+  margin-right: 10px; margin-top: 2px; align-self: stretch; min-height: 22px;
+}
+.pmo-pop-header .ph-level-bar.program { background: var(--brand); }
+.pmo-pop-header .ph-level-bar.project { background: #3B82F6; }
+.pmo-pop-header .ph-level-bar.phase { background: #60A5FA; }
+.pmo-pop-header .ph-level-bar.wp { background: #93C5FD; }
+.pmo-pop-header .ph-level-bar.task { background: #BFDBFE; }
+
+.pmo-pop-header .ph-title-block { flex: 1; min-width: 0; }
+
+.pmo-pop-header .ph-level-label {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--t3); margin-bottom: 1px;
+}
+.pmo-pop-header .ph-title {
+  font-size: 16px; font-weight: 700;
+  color: var(--t1); outline: none;
+  line-height: 1.3; padding: 0;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color .15s;
+}
+.pmo-pop-header .ph-title:focus { border-bottom-color: var(--brand); }
+.pmo-pop-header .ph-title:empty::before { content: 'Nhập tên...'; color: var(--t3); font-weight: 400; }
+
+/* Description */
+.pmo-pop-header .ph-desc {
+  font-size: 11px; color: var(--t3);
+  outline: none; padding: 2px 0;
+  line-height: 1.35; margin-top: 1px;
+  margin-bottom: 2px; margin-left: 14px;
+  transition: all .12s; border-radius: 3px;
+  max-height: 34px; overflow: hidden;
+}
+.pmo-pop-header .ph-desc:focus { background: rgba(255,255,255,0.8); padding: 3px 6px; color: var(--t2); max-height: none; }
+.pmo-pop-header .ph-desc:empty::before { content: 'Thêm mô tả...'; font-style: italic; }
+
+/* ── Tab bar ── */
+.pmo-pop-tabs {
+  display: flex; gap: 0;
+  padding: 0 22px;
+  background: var(--bg-white);
+  flex-shrink: 0;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--b-light);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.pmo-pop-tabs::-webkit-scrollbar { height: 0; }
+
+.pmo-pop-tab {
+  padding: 9px 16px;
+  font-size: 12px; font-weight: 500;
+  color: var(--t3); cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1px;
+  transition: all .12s; flex-shrink: 0;
+}
+.pmo-pop-tab:hover { color: var(--t2); background: var(--bg-app); }
+.pmo-pop-tab.active { color: var(--brand); font-weight: 600; border-bottom-color: var(--brand); background: transparent; }
+.pmo-pop-tab .tab-count {
+  font-size: 9px; font-weight: 700;
+  background: var(--brand-light); color: var(--brand);
+  padding: 1px 5px; border-radius: 8px;
+  margin-left: 4px; vertical-align: middle;
+}
+
+/* ── Body ── */
+.pmo-pop-body {
+  flex: 1; overflow-y: auto;
+  padding: 0;
+  background: var(--bg-app);
+  min-height: 0;
+}
+.pmo-pop-body::-webkit-scrollbar { width: 5px; }
+.pmo-pop-body::-webkit-scrollbar-track { background: transparent; }
+.pmo-pop-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+/* Panels */
+.pmo-pop-panel { display: none; }
+.pmo-pop-panel.active { display: flex; flex-direction: column; height: 100%; }
+
+/* ── Action footer — Hủy + Cập nhật ── */
+.pmo-pop-actions {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: var(--bg-white);
+  border-top: 1px solid var(--b-light);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.03);
+}
+.pmo-pop-actions .pa-btn {
+  padding: 7px 20px;
+  border: 1px solid var(--b-light);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .12s;
+  background: var(--bg-white);
+  color: var(--t2);
+}
+.pmo-pop-actions .pa-btn:hover { background: var(--bg-app); }
+.pmo-pop-actions .pa-btn.primary {
+  background: var(--brand);
+  color: var(--tw);
+  border-color: var(--brand);
+  font-weight: 600;
+}
+.pmo-pop-actions .pa-btn.primary:hover { opacity: 0.88; }
+
+/* Panel content area — scrollable part */
+.pmo-pop-panel .panel-scroll {
+  flex: 1; overflow-y: auto;
+  padding: 16px 22px;
+}
+.pmo-pop-panel .panel-scroll::-webkit-scrollbar { width: 5px; }
+.pmo-pop-panel .panel-scroll::-webkit-scrollbar-track { background: transparent; }
+.pmo-pop-panel .panel-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+/* Panel with no sticky footer — just padded */
+.pmo-pop-panel .panel-full {
+  flex: 1; overflow-y: auto;
+  padding: 16px 22px 24px;
+}
+.pmo-pop-panel .panel-full::-webkit-scrollbar { width: 5px; }
+.pmo-pop-panel .panel-full::-webkit-scrollbar-track { background: transparent; }
+.pmo-pop-panel .panel-full::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+/* Panel sticky footer — for note input, add subtask */
+.pmo-pop-panel .panel-footer {
+  flex-shrink: 0;
+  padding: 8px 22px 14px;
+  background: var(--bg-white);
+  border-top: 1px solid var(--b-light);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.03);
+}

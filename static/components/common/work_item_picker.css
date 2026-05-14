@@ -1,0 +1,89 @@
+/* ═══════════════════════════════════════════════════════
+   Work Item Picker — Tree browser popover
+   ═══════════════════════════════════════════════════════ */
+.wip-popover {
+  background: var(--bg-white, #fff); border: 1px solid var(--b-light, #e5e7eb);
+  border-radius: 10px; width: 320px; max-height: 350px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.12); display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.wip-header {
+  display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+  border-bottom: 1px solid var(--b-light); flex-shrink: 0;
+}
+.wip-back {
+  background: none; border: 1px solid var(--b-light); border-radius: 5px;
+  width: 26px; height: 26px; font-size: 14px; cursor: pointer; color: var(--t2);
+  display: flex; align-items: center; justify-content: center;
+}
+.wip-back:hover { background: var(--bg-app); }
+.wip-title { font-size: 12px; font-weight: 700; color: var(--t1); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wip-list { flex: 1; overflow-y: auto; padding: 4px; }
+.wip-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border-radius: 6px; cursor: pointer; transition: background .1s;
+}
+.wip-item:hover { background: var(--brand-light, #e8f2fa); }
+.wip-type {
+  font-size: 9px; font-weight: 700; color: var(--brand, #0066B3);
+  background: var(--brand-light, #e8f2fa); padding: 2px 5px; border-radius: 3px;
+  flex-shrink: 0;
+}
+.wip-name { font-size: 12px; color: var(--t1); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wip-drill {
+  background: none; border: 1px solid var(--b-light); border-radius: 4px;
+  width: 22px; height: 22px; font-size: 14px; color: var(--t3); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.wip-drill:hover { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+.wip-empty { padding: 20px; text-align: center; color: var(--t3); font-size: 12px; }
+
+/* ── Work Item Chip (selected display) ── */
+.wip-chip {
+  display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+  background: var(--bg-app, #f8f9fb); border: 1px solid var(--b-light);
+  border-radius: 6px; font-size: 12px; cursor: default; max-width: 100%;
+}
+.wip-chip.editable { cursor: pointer; }
+.wip-chip.editable:hover { border-color: var(--brand); }
+.wip-chip-type {
+  font-size: 9px; font-weight: 700; color: var(--brand);
+  background: var(--brand-light); padding: 1px 4px; border-radius: 3px; flex-shrink: 0;
+}
+.wip-chip-bc { color: var(--t2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11.5px; }
+.wip-chip-select {
+  background: none; border: 1px dashed var(--b-medium); border-radius: 5px;
+  padding: 3px 10px; font-size: 11px; color: var(--t3); cursor: pointer; font-family: var(--font);
+}
+.wip-chip-select:hover { border-color: var(--brand); color: var(--brand); }
+.wip-chip-clear {
+  background: none; border: none; color: var(--t3); cursor: pointer; font-size: 14px;
+  margin-left: 2px; line-height: 1;
+}
+.wip-chip-clear:hover { color: #dc2626; }
+
+/* ═══════════════════════════════════════════════════════
+   Severity Chip — reusable severity badge
+   ═══════════════════════════════════════════════════════ */
+.pmo-severity {
+  display: inline-flex; padding: 2px 8px; border-radius: 4px;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+}
+.pmo-severity[data-sev="critical"] { background: #fef2f2; color: #dc2626; }
+.pmo-severity[data-sev="high"]     { background: #fff7ed; color: #ea580c; }
+.pmo-severity[data-sev="medium"]   { background: #fefce8; color: #ca8a04; }
+.pmo-severity[data-sev="low"]      { background: #f0fdf4; color: #16a34a; }
+
+/* Editable: click to cycle */
+.pmo-severity.editable { cursor: pointer; }
+
+/* ═══════════════════════════════════════════════════════
+   RAIQD Status Chip — open/closed toggle
+   ═══════════════════════════════════════════════════════ */
+.pmo-raiqd-status {
+  display: inline-flex; padding: 2px 8px; border-radius: 4px;
+  font-size: 10.5px; font-weight: 700;
+}
+.pmo-raiqd-status[data-rs="open"]   { background: #dbeafe; color: #2563eb; }
+.pmo-raiqd-status[data-rs="closed"] { background: #f3f4f6; color: #6b7280; }
+.pmo-raiqd-status.editable { cursor: pointer; }

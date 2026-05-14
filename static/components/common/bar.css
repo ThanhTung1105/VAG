@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-bar — Progress Bar (3-layer)
+   Bottom: unfilled (health color, opacity 0.18)
+   Middle: %finished (health color, opacity 0.45)
+   Top: %approved (health color, opacity 0.85)
+   + overdue hatch (red, separate from bar)
+   + cancelled hatch (grey overlay)
+   ═══════════════════════════════════════════════════════ */
+.pmo-bar {
+  position: relative;
+  height: 28px;
+  border-radius: var(--bar-r);
+  overflow: visible;
+  cursor: pointer;
+}
+.pmo-bar-inner {
+  position: relative;
+  height: 100%;
+  border-radius: var(--bar-r);
+  overflow: hidden;
+}
+.pmo-bar-bg {
+  position: absolute; inset: 0;
+  border-radius: var(--bar-r);
+  opacity: 0.18;
+}
+.pmo-bar-finished {
+  position: absolute; top: 0; bottom: 0; left: 0;
+  border-radius: var(--bar-r) 0 0 var(--bar-r);
+  z-index: 1;
+  opacity: 0.45;
+}
+.pmo-bar-approved {
+  position: absolute; top: 0; bottom: 0; left: 0;
+  border-radius: var(--bar-r) 0 0 var(--bar-r);
+  z-index: 2;
+  opacity: 0.85;
+}
+.pmo-bar-overdue {
+  position: absolute; top: 0; bottom: 0;
+  z-index: 3;
+  border-radius: 0 var(--bar-r) var(--bar-r) 0;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 3px,
+    rgba(220,38,38,0.3) 3px, rgba(220,38,38,0.3) 6px
+  );
+}
+.pmo-bar-cancelled {
+  position: absolute; inset: 0;
+  border-radius: var(--bar-r);
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 3px,
+    rgba(107,114,128,0.25) 3px, rgba(107,114,128,0.25) 6px
+  );
+  z-index: 4;
+}
+
+/* Highlight on hover */
+.pmo-bar.hl .pmo-bar-inner {
+  box-shadow: 0 0 0 2px var(--brand), 0 2px 8px rgba(0,102,179,0.2);
+}

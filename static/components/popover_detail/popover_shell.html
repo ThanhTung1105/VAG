@@ -1,0 +1,305 @@
+<div class="sec" id="popover_shell">
+  <div class="sec-head"><span class="sec-title">Popover Shell</span><span class="sec-id">popover_detail/popover_shell</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Test toàn bộ components trong popover thật: sửa assignees, đổi milestone, thêm đầu việc, gửi ghi chú, duyệt/từ chối, sửa tên/mô tả,...</p>
+  <div class="card">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="pmo-chip-add" onclick="openTaskDemo()">Task (6 tabs)</button>
+      <button class="pmo-chip-add" onclick="openWpDemo()">Work Package (5 tabs)</button>
+      <button class="pmo-chip-add" onclick="openPhaseDemo()">Phase (5 tabs)</button>
+      <button class="pmo-chip-add" onclick="openProjectDemo()">Project (4 tabs)</button>
+      <button class="pmo-chip-add" onclick="openProgramDemo()">Program (3 tabs)</button>
+    </div>
+  </div>
+  <div id="popContainer"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   TASK POPOVER — full interactive demo
+   ═══════════════════════════════════════════════════════ */
+function openTaskDemo() {
+  // Tab: Tổng quan
+  var ov = '<div class="panel-full">';
+  ov += PMO.Field.rowCol('Hình thức', PMO.ExecMode.render('offline', 'Họp trực tiếp tại văn phòng Việt Anh, tầng 3', {editable:true}));
+  ov += PMO.Field.row('Kết quả', PMO.DeliverableLink.render('https://drive.google.com/file/abc', {editable:true}));
+  ov += PMO.Field.row('Trạng thái', PMO.StatusChip.render('in_progress', 'on_track', {editable:true}) + ' ' + PMO.HealthChip.render('on_track', {editable:true}));
+  ov += PMO.Field.row('Tiến độ', PMO.ProgressInline.render(80, 60, 'on_track', 'in_progress'));
+  ov += PMO.Field.rowCol('KQ chính', PMO.Summary.render('Kế hoạch dự án đã xong, team đã thành lập.', {editable:true}));
+  ov += PMO.Field.row('Kế hoạch', PMO.Date.renderRange('13/04/2026', '18/04/2026', {showTime:false, editable:true}));
+  ov += PMO.Field.row('Thực hiện', PMO.Date.renderRange('13/04/2026', '17/04/2026', {showTime:false, editable:true}));
+  ov += PMO.Field.row('PIC', PMO.MemberField.renderSingle('Long NNL','BI Analyst',{editable:true}));
+  ov += PMO.Field.row('Approver', PMO.MemberField.renderSingle('Anh LTD','GĐ Điều hành',{editable:true}));
+  ov += PMO.Field.row('Assignees', PMO.MemberField.renderList([{name:'Long NNL',role:'BI Analyst'},{name:'Hà NTT',role:'Admin'},{name:'Minh PT',role:'IT'}], {maxLines:2, editable:true}));
+  ov += '</div>';
+
+  // Tab: Đầu việc
+  var st = '<div class="panel-scroll" id="popSubtaskScroll"><div id="popSubtasks">' + PMO.Subtask.renderList([
+    {id:'st1', content:'Lập danh sách đầu mối liên hệ', finishStatus:'approved', assignee:'Long NNL', notes:[{id:'sn1',author:'Long NNL',time:'13/04 09:30',content:'Đã liên hệ 5/7 đầu mối',isOwner:true}]},
+    {id:'st2', content:'Chuẩn bị phòng họp kick-off', finishStatus:'finished', assignee:'Hà NTT', notes:[]},
+    {id:'st3', content:'Soạn agenda buổi kick-off', finishStatus:'unfinished', assignee:'Long NNL', notes:[{id:'sn2',author:'Minh PT',time:'14/04 08:00',content:'Nên thêm phần Q&A',isOwner:false}]},
+    {id:'st4', content:'Kiểm tra âm thanh', finishStatus:'unfinished', assignee:'', notes:[]},
+    {id:'st5', content:'Kiểm tra đường truyền mạng', finishStatus:'unfinished', assignee:'', notes:[]},
+    {id:'st6', content:'Căn góc máy quay', finishStatus:'unfinished', assignee:'Hà NTT', notes:[]},
+    {id:'st7', content:'Kiểm tra kết nối máy chiếu', finishStatus:'unfinished', assignee:'', notes:[]},
+  ], {showAdd:false}) + '</div></div>';
+  st += '<div class="panel-footer"><div class="pmo-subtask-add" data-action="add-subtask" style="margin:0;padding:4px 0"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v5M4.5 7h5"/></svg> Thêm đầu việc</div></div>';
+
+  // Tab: Phê duyệt
+  var ap = '<div class="panel-full"><div id="popApprove">' + PMO.Approve.renderList([
+    {id:'st2', content:'Chuẩn bị phòng họp', assignee:'Hà NTT', finishedAt:'15/04 14:00', status:'pending'},
+    {id:'st3', content:'Soạn agenda kick-off', assignee:'Long NNL', finishedAt:'16/04 10:00', status:'pending'},
+    {id:'st1', content:'Lập danh sách đầu mối', assignee:'Long NNL', finishedAt:'13/04 17:00', status:'approved', approvedAt:'14/04 09:00'},
+  ]) + '</div></div>';
+
+  // Tab: Ghi chú
+  var notes = [
+    {id:'n1',author:'Anh LTD',time:'13/04 09:15',content:'Kiểm tra mic trước 30 phút.',source:'Task',isOwner:false},
+    {id:'n2',author:'Long NNL',time:'13/04 10:30',content:'OK anh, đã book phòng rồi.',source:'Task',isOwner:true},
+    {id:'n3',author:'Hà NTT',time:'13/04 11:00',content:'Slide kick-off em đã gửi qua email.',source:'Task',isOwner:false},
+    {id:'n4',author:'Long NNL',time:'13/04 14:20',content:'Đã review xong, có vài chỗ cần sửa.',source:'Task',isOwner:true},
+    {id:'n5',author:'Minh PT',time:'14/04 08:00',content:'Citek confirm 3 người tham dự.',source:'WP',isOwner:false},
+  ];
+  var nt = '<div class="panel-scroll"><div class="pmo-note-list" id="popNoteList">';
+  for (var i=0;i<notes.length;i++) nt += PMO.Note.renderItem(notes[i]);
+  nt += '</div></div><div class="panel-footer"><div class="pmo-note-input" style="border-top:none;margin:0;padding:0"><textarea class="ni-textarea" placeholder="Nhập ghi chú..." rows="1"></textarea><button class="ni-send" title="Gửi">'+PMO.Note.SEND_SVG+'</button></div></div>';
+
+  // Tab: Lịch sử
+  var tr = '<div class="panel-full"><div id="popTrail">' + PMO.Trail.renderList([
+    {source:'user',user:'Long NNL',time:'13/04 09:00',action:'add',level:'task',target:'Xây dựng kế hoạch dự án'},
+    {source:'user',user:'Long NNL',time:'13/04 09:05',action:'add',level:'subtask',target:'Lập danh sách đầu mối'},
+    {source:'user',user:'Long NNL',time:'13/04 09:06',action:'add',level:'subtask',target:'Chuẩn bị phòng họp kick-off'},
+    {source:'user',user:'Hà NTT',time:'14/04 10:00',action:'edit',level:'task',target:'Xây dựng kế hoạch dự án',attr:'planned_finish',oldVal:'15/04',newVal:'18/04'},
+    {source:'system',time:'16/04 00:00',action:'edit',level:'task',target:'Xây dựng kế hoạch dự án',attr:'status',oldVal:'Chưa bắt đầu',newVal:'Đang thực hiện'},
+    {source:'user',user:'Long NNL',time:'16/04 16:30',action:'edit',level:'subtask',target:'Lập danh sách đầu mối',attr:'finish_status',oldVal:'unfinished',newVal:'finished'},
+    {source:'user',user:'Anh LTD',time:'17/04 09:00',action:'edit',level:'subtask',target:'Lập danh sách đầu mối',attr:'finish_status',oldVal:'finished',newVal:'approved'},
+  ]) + '</div></div>';
+
+  PMO.PopoverShell.mount(document.getElementById('popContainer'), {
+    breadcrumb: [{label:'Chuyển đổi số',level:'program',id:'prg1'},{label:'SAP S/4HANA',level:'project',id:'prj1'},{label:'Prepare',level:'phase',id:'ph1'},{label:'Khởi động dự án',level:'wp',id:'wp1'}],
+    level:'task', title:'Xây dựng kế hoạch dự án, chuẩn bị CSVC',
+    description:'Lên kế hoạch chi tiết cho giai đoạn Prepare.', editable:true,
+    tabs:[{key:'overview',label:'Tổng quan'},{key:'subtasks',label:'Đầu việc',count:'7'},{key:'approve',label:'Phê duyệt',count:'2'},{key:'notes',label:'Ghi chú',count:'5'},{key:'deps',label:'Phụ thuộc'},{key:'history',label:'Lịch sử'}],
+    panels:{overview:ov, subtasks:st, approve:ap, notes:nt, deps:'<div class="panel-full"><div style="color:var(--t3);text-align:center;padding:40px;font-size:12px">Chưa có phụ thuộc nào</div></div>', history:tr},
+    onMount: function(el) {
+      // Subtask
+      var stP = el.querySelector('[data-panel="subtasks"]'); if (stP) PMO.Subtask.bind(stP, {currentUser:'Long NNL'});
+      // Approve
+      var apEl = el.querySelector('#popApprove'); if (apEl) PMO.Approve.bind(apEl);
+      // Notes
+      var notePanel = el.querySelector('[data-panel="notes"]');
+      if (notePanel) {
+        var noteList = notePanel.querySelector('.pmo-note-list');
+        var textarea = notePanel.querySelector('.ni-textarea');
+        var sendBtn = notePanel.querySelector('.ni-send');
+        var scrollArea = notePanel.querySelector('.panel-scroll');
+        if (scrollArea) scrollArea.scrollTop = scrollArea.scrollHeight;
+        if (textarea) textarea.addEventListener('input', function(){ this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,80)+'px'; });
+        if (sendBtn && textarea) {
+          function doSend() {
+            var text = textarea.value.trim(); if (!text) return;
+            var tmp = document.createElement('div');
+            tmp.innerHTML = PMO.Note.renderItem({id:'n_'+Date.now(),author:'Long NNL',time:PMO.Note._now(),content:text,source:'Task',isOwner:true});
+            noteList.appendChild(tmp.firstElementChild);
+            if (scrollArea) scrollArea.scrollTop = scrollArea.scrollHeight;
+            textarea.value=''; textarea.style.height='auto';
+          }
+          sendBtn.addEventListener('click', doSend);
+          textarea.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSend();} });
+        }
+        // Bind edit/delete on notes
+        if (noteList) {
+          noteList.addEventListener('click', function(e) {
+            var btn = e.target.closest('.ni-act-btn');
+            if (!btn) return;
+            var noteEl = btn.closest('.pmo-note-item');
+            if (!noteEl) return;
+            if (btn.dataset.act === 'delete') { noteEl.remove(); }
+            else if (btn.dataset.act === 'edit') {
+              var c = noteEl.querySelector('.ni-content');
+              c.setAttribute('contenteditable','true'); c.focus();
+              c.style.background='#FFFBEB'; c.style.padding='4px'; c.style.borderRadius='4px'; c.style.outline='1.5px solid var(--c-ar)';
+              c.addEventListener('blur', function(){ c.removeAttribute('contenteditable'); c.style.background=''; c.style.padding=''; c.style.borderRadius=''; c.style.outline=''; }, {once:true});
+            }
+          });
+        }
+      }
+      // Trail
+      var trEl = el.querySelector('#popTrail'); if (trEl) PMO.Trail.bind(trEl);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   WP POPOVER — with editable milestone
+   ═══════════════════════════════════════════════════════ */
+function openWpDemo() {
+  var ov = '<div class="panel-full">';
+  ov += PMO.Field.row('Milestone', PMO.MilestoneField.render('big','on_track',{editable:true}));
+  ov += PMO.Field.row('Trạng thái', PMO.StatusChip.render('in_progress','on_track',{editable:true})+' '+PMO.HealthChip.render('on_track',{editable:true}));
+  ov += PMO.Field.row('Tiến độ', PMO.ProgressInline.render(60,40,'on_track','in_progress'));
+  ov += PMO.Field.rowCol('KQ chính', PMO.Summary.render('Dự án chính thức khởi động, đội dự án thành lập.', {editable:true}));
+  ov += PMO.Field.row('Kế hoạch', PMO.Date.renderRange('13/04/2026','27/04/2026',{showTime:false,editable:true}));
+  ov += PMO.Field.row('PIC', PMO.MemberField.renderSingle('Long NNL','BI Analyst',{editable:true}));
+  ov += PMO.Field.row('Approver', PMO.MemberField.renderSingle('Anh LTD','GĐ Điều hành',{editable:true}));
+  ov += PMO.Field.row('Assignees', PMO.MemberField.renderList([{name:'Long NNL',role:'BI Analyst'},{name:'Hà NTT',role:'Admin'},{name:'Minh PT',role:'IT'}], {maxLines:2, editable:true}));
+  ov += '</div>';
+
+  // Notes with sticky input
+  var nt = '<div class="panel-scroll"><div class="pmo-note-list" id="popNoteList2">';
+  nt += PMO.Note.renderItem({id:'wn1',author:'Long NNL',time:'13/04 09:00',content:'WP đã được tạo, bắt đầu phân công.',source:'WP',isOwner:true});
+  nt += '</div></div><div class="panel-footer"><div class="pmo-note-input" style="border-top:none;margin:0;padding:0"><textarea class="ni-textarea" placeholder="Nhập ghi chú..." rows="1"></textarea><button class="ni-send" title="Gửi">'+PMO.Note.SEND_SVG+'</button></div></div>';
+
+  PMO.PopoverShell.mount(document.getElementById('popContainer'), {
+    breadcrumb:[{label:'Chuyển đổi số',level:'program',id:'prg1'},{label:'SAP S/4HANA',level:'project',id:'prj1'},{label:'Prepare',level:'phase',id:'ph1'}],
+    level:'wp', title:'Khởi động dự án',
+    description:'Work package cho việc khởi động dự án SAP.',
+    editable:true,
+    tabs:[{key:'overview',label:'Tổng quan'},{key:'tasks',label:'Công việc',count:'5'},{key:'notes',label:'Ghi chú',count:'1'},{key:'deps',label:'Phụ thuộc'},{key:'history',label:'Lịch sử'}],
+    panels:{
+      overview:ov,
+      tasks:'<div class="panel-full">' + PMO.TaskList.renderList([
+        {id:'t1',name:'Xây dựng kế hoạch dự án',execMode:'offline',status:'in_progress',health:'on_track',pctFinished:80,pctApproved:60,plannedStart:'13/04/2026 08:00',plannedFinish:'18/04/2026 17:30',pic:'Long NNL',deliverableUrl:'https://drive.google.com/file/abc'},
+        {id:'t2',name:'Thành lập đội dự án',execMode:'independent',status:'completed',health:'on_track',pctFinished:100,pctApproved:100,plannedStart:'10/04/2026',plannedFinish:'12/04/2026',pic:'Hà NTT',deliverableUrl:''},
+        {id:'t3',name:'Lễ khởi động dự án',execMode:'offline',status:'not_started',health:'on_track',pctFinished:0,pctApproved:0,plannedStart:'20/04/2026 09:00',plannedFinish:'20/04/2026 12:00',pic:'Long NNL',deliverableUrl:''},
+        {id:'t4',name:'Đào tạo tổng quan SAP',execMode:'online',status:'in_progress',health:'at_risk',pctFinished:40,pctApproved:20,plannedStart:'21/04/2026',plannedFinish:'25/04/2026',pic:'Minh PT',deliverableUrl:''},
+        {id:'t5',name:'Khảo sát quy trình as-is',execMode:'site_visit',status:'in_progress',health:'behind_schedule',pctFinished:30,pctApproved:10,plannedStart:'15/04/2026 14:00',plannedFinish:'22/04/2026 17:00',pic:'Citek Team',deliverableUrl:''},
+      ], {showAdd:true}) + '</div>',
+      notes:nt,
+      deps:'<div class="panel-full"><div style="color:var(--t3);text-align:center;padding:40px;font-size:12px">Chưa có phụ thuộc</div></div>',
+      history:'<div class="panel-full">'+PMO.Trail.renderList([{source:'user',user:'Long NNL',time:'13/04 09:00',action:'add',level:'wp',target:'Khởi động dự án'},{source:'user',user:'Long NNL',time:'13/04 09:10',action:'edit',level:'wp',target:'Khởi động dự án',attr:'milestone',oldVal:'none',newVal:'big'}])+'</div>'
+    },
+    onMount: function(el) {
+      // Notes input binding
+      var notePanel = el.querySelector('[data-panel="notes"]');
+      if (notePanel) {
+        var noteList = notePanel.querySelector('.pmo-note-list');
+        var textarea = notePanel.querySelector('.ni-textarea');
+        var sendBtn = notePanel.querySelector('.ni-send');
+        var scrollArea = notePanel.querySelector('.panel-scroll');
+        if (textarea) textarea.addEventListener('input', function(){ this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,80)+'px'; });
+        if (sendBtn && textarea) {
+          function doSend2() {
+            var text = textarea.value.trim(); if (!text) return;
+            var tmp = document.createElement('div');
+            tmp.innerHTML = PMO.Note.renderItem({id:'n_'+Date.now(),author:'Long NNL',time:PMO.Note._now(),content:text,source:'WP',isOwner:true});
+            noteList.appendChild(tmp.firstElementChild);
+            if (scrollArea) scrollArea.scrollTop = scrollArea.scrollHeight;
+            textarea.value=''; textarea.style.height='auto';
+          }
+          sendBtn.addEventListener('click', doSend2);
+          textarea.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSend2();} });
+        }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   PHASE POPOVER — 5 tabs
+   ═══════════════════════════════════════════════════════ */
+function openPhaseDemo() {
+  var ov = '<div class="panel-full">';
+  ov += PMO.Field.row('Trạng thái', PMO.StatusChip.render('in_progress','on_track',{editable:true})+' '+PMO.HealthChip.render('on_track',{editable:true}));
+  ov += PMO.Field.row('Tiến độ', PMO.ProgressInline.render(30,15,'on_track','in_progress'));
+  ov += PMO.Field.row('Kế hoạch', PMO.Date.renderRange('13/04/2026','25/05/2026',{showTime:false,editable:true}));
+  ov += '</div>';
+
+  // WP list in "Công việc" tab
+  var wps = PMO.TaskList.renderList([
+    {id:'wp1',name:'Khởi động dự án',status:'in_progress',health:'on_track',pctFinished:80,pctApproved:60,plannedStart:'13/04/2026',plannedFinish:'27/04/2026',pic:'Long NNL'},
+    {id:'wp2',name:'Đào tạo tổng quan SAP',status:'in_progress',health:'at_risk',pctFinished:40,pctApproved:20,plannedStart:'20/04/2026',plannedFinish:'11/05/2026',pic:'Minh PT'},
+    {id:'wp3',name:'Khảo sát hiện trường',status:'not_started',health:'on_track',pctFinished:0,pctApproved:0,plannedStart:'11/05/2026',plannedFinish:'25/05/2026',pic:'Citek Team'},
+  ], {title:'Work Packages', showAdd:false, emptyText:'Chưa có work package nào'});
+
+  var nt = '<div class="panel-scroll"><div class="pmo-note-list"><div class="pmo-note-empty">Chưa có ghi chú nào</div></div></div><div class="panel-footer"><div class="pmo-note-input" style="border-top:none;margin:0;padding:0"><textarea class="ni-textarea" placeholder="Nhập ghi chú..." rows="1"></textarea><button class="ni-send" title="Gửi">'+PMO.Note.SEND_SVG+'</button></div></div>';
+
+  PMO.PopoverShell.mount(document.getElementById('popContainer'), {
+    breadcrumb:[{label:'Chuyển đổi số',level:'program',id:'prg1'},{label:'SAP S/4HANA',level:'project',id:'prj1'}],
+    level:'phase', title:'Prepare',
+    description:'Giai đoạn chuẩn bị dự án SAP S/4HANA.',
+    editable:true,
+    tabs:[{key:'overview',label:'Tổng quan'},{key:'wps',label:'Công việc',count:'3'},{key:'notes',label:'Ghi chú'},{key:'deps',label:'Phụ thuộc'},{key:'history',label:'Lịch sử'}],
+    panels:{
+      overview:ov,
+      wps:'<div class="panel-full">'+wps+'</div>',
+      notes:nt,
+      deps:'<div class="panel-full"><div style="color:var(--t3);text-align:center;padding:40px;font-size:12px">Chưa có phụ thuộc</div></div>',
+      history:'<div class="panel-full">'+PMO.Trail.renderList([
+        {source:'user',user:'Long NNL',time:'13/04 09:00',action:'add',level:'phase',target:'Prepare'},
+      ])+'</div>'
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROJECT POPOVER — 4 tabs
+   ═══════════════════════════════════════════════════════ */
+function openProjectDemo() {
+  var ov = '<div class="panel-full">';
+  ov += PMO.Field.row('Trạng thái', PMO.StatusChip.render('in_progress','on_track',{editable:true})+' '+PMO.HealthChip.render('on_track',{editable:true}));
+  ov += PMO.Field.row('Tiến độ', PMO.ProgressInline.render(15,8,'on_track','in_progress'));
+  ov += PMO.Field.rowCol('Mô tả dự án', PMO.Summary.render('Triển khai hệ thống SAP S/4HANA Cloud cho Việt Anh Group, bao gồm FI/CO, MM, SD, PP.', {editable:true}));
+  ov += '</div>';
+
+  // Phase list in "Giai đoạn" tab
+  var phases = PMO.TaskList.renderList([
+    {id:'ph1',name:'Prepare',status:'in_progress',health:'on_track',pctFinished:30,pctApproved:15,plannedStart:'13/04/2026',plannedFinish:'25/05/2026'},
+    {id:'ph2',name:'Explore',status:'not_started',health:'on_track',pctFinished:0,pctApproved:0,plannedStart:'25/05/2026',plannedFinish:'20/07/2026'},
+    {id:'ph3',name:'Realize',status:'not_started',health:'on_track',pctFinished:0,pctApproved:0,plannedStart:'20/07/2026',plannedFinish:'15/10/2026'},
+    {id:'ph4',name:'Deploy',status:'not_started',health:'on_track',pctFinished:0,pctApproved:0,plannedStart:'15/10/2026',plannedFinish:'01/12/2026'},
+    {id:'ph5',name:'Run',status:'not_started',health:'on_track',pctFinished:0,pctApproved:0,plannedStart:'01/12/2026',plannedFinish:'01/03/2027'},
+  ], {title:'Giai đoạn', showAdd:false, emptyText:'Chưa có giai đoạn nào'});
+
+  var nt = '<div class="panel-scroll"><div class="pmo-note-list"><div class="pmo-note-empty">Chưa có ghi chú nào</div></div></div><div class="panel-footer"><div class="pmo-note-input" style="border-top:none;margin:0;padding:0"><textarea class="ni-textarea" placeholder="Nhập ghi chú..." rows="1"></textarea><button class="ni-send" title="Gửi">'+PMO.Note.SEND_SVG+'</button></div></div>';
+
+  PMO.PopoverShell.mount(document.getElementById('popContainer'), {
+    breadcrumb:[{label:'Chuyển đổi số',level:'program',id:'prg1'}],
+    level:'project', title:'SAP S/4HANA Cloud',
+    description:'Triển khai ERP SAP S/4HANA Cloud Public Edition cho Việt Anh Group.',
+    editable:true,
+    tabs:[{key:'overview',label:'Tổng quan'},{key:'phases',label:'Giai đoạn',count:'5'},{key:'notes',label:'Ghi chú'},{key:'history',label:'Lịch sử'}],
+    panels:{
+      overview:ov,
+      phases:'<div class="panel-full">'+phases+'</div>',
+      notes:nt,
+      history:'<div class="panel-full">'+PMO.Trail.renderList([
+        {source:'user',user:'Anh LTD',time:'01/04 09:00',action:'add',level:'project',target:'SAP S/4HANA Cloud'},
+        {source:'user',user:'Long NNL',time:'13/04 09:00',action:'add',level:'phase',target:'Prepare'},
+      ])+'</div>'
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROGRAM POPOVER — 3 tabs
+   ═══════════════════════════════════════════════════════ */
+function openProgramDemo() {
+  var ov = '<div class="panel-full">';
+  ov += PMO.Field.row('Trạng thái', PMO.StatusChip.render('in_progress','on_track',{editable:true})+' '+PMO.HealthChip.render('on_track',{editable:true}));
+  ov += PMO.Field.row('Tiến độ', PMO.ProgressInline.render(10,5,'on_track','in_progress'));
+  ov += PMO.Field.rowCol('Mô tả', PMO.Summary.render('Chương trình Chuyển đổi số toàn diện cho Việt Anh Group: SAP ERP + Microsoft 365.', {editable:true}));
+  ov += '</div>';
+
+  // Project list in "Dự án" tab
+  var projects = PMO.TaskList.renderList([
+    {id:'prj1',name:'SAP S/4HANA Cloud',status:'in_progress',health:'on_track',pctFinished:15,pctApproved:8,plannedStart:'13/04/2026',plannedFinish:'01/03/2027'},
+    {id:'prj2',name:'Microsoft 365',status:'in_progress',health:'on_track',pctFinished:40,pctApproved:30,plannedStart:'01/03/2026',plannedFinish:'30/09/2026'},
+  ], {title:'Dự án', showAdd:false, emptyText:'Chưa có dự án nào'});
+
+  PMO.PopoverShell.mount(document.getElementById('popContainer'), {
+    breadcrumb:[],
+    level:'program', title:'CHUYỂN ĐỔI SỐ',
+    description:'Chương trình chuyển đổi số toàn diện cho Việt Anh Group.',
+    editable:true,
+    tabs:[{key:'overview',label:'Tổng quan'},{key:'projects',label:'Dự án',count:'2'},{key:'history',label:'Lịch sử'}],
+    panels:{
+      overview:ov,
+      projects:'<div class="panel-full">'+projects+'</div>',
+      history:'<div class="panel-full">'+PMO.Trail.renderList([
+        {source:'user',user:'Anh LTD',time:'01/03 09:00',action:'add',level:'program',target:'Chuyển đổi số'},
+      ])+'</div>'
+    }
+  });
+}
+</script>

@@ -1,0 +1,26 @@
+<div class="sec" id="add_task">
+  <div class="sec-head"><span class="sec-title">Add Task Popover</span><span class="sec-id">popover_detail/add_task</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Tạo task mới. Cùng chiều cao, cùng layout với popover shell. Subtask list scroll riêng, "+ Thêm đầu việc" sticky dưới.</p>
+  <div class="card">
+    <button class="pmo-chip-add" onclick="openAddTaskDemo()">Mở "Thêm Task"</button>
+  </div>
+  <div id="addTaskContainer"></div>
+</div>
+
+<script>
+function openAddTaskDemo() {
+  PMO.AddTask.open(document.getElementById('addTaskContainer'), {
+    breadcrumb: [
+      {label:'Chuyển đổi số', level:'program', id:'prg1'},
+      {label:'SAP S/4HANA', level:'project', id:'prj1'},
+      {label:'Prepare', level:'phase', id:'ph1'},
+      {label:'Khởi động dự án', level:'wp', id:'wp1'}
+    ],
+    onCreate: function(data) {
+      console.log('Task created:', data);
+      alert('Task "' + data.title + '" đã tạo!\n' + data.subtasks.length + ' đầu việc.');
+    }
+  });
+}
+</script>

@@ -1,0 +1,23 @@
+<div class="sec" id="trail">
+  <div class="sec-head"><span class="sec-title">Trail (Audit Log)</span><span class="sec-id">popover_detail/trail</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Mọi hành động Thêm/Sửa/Xóa đều ghi lại. Dot màu theo hành động. Sửa hiện giá trị cũ → mới.</p>
+  <div class="card" style="max-width:520px" id="trailDemo"></div>
+</div>
+<script>
+(function(){
+  var container = document.getElementById('trailDemo');
+  container.innerHTML = PMO.Trail.renderList([
+    {source:'user', user:'Long NNL', time:'13/04/2026 09:00', action:'add', level:'wp', target:'Khởi động dự án'},
+    {source:'user', user:'Long NNL', time:'13/04/2026 09:05', action:'add', level:'task', target:'Xây dựng kế hoạch dự án'},
+    {source:'user', user:'Long NNL', time:'13/04/2026 09:10', action:'add', level:'subtask', target:'Lập danh sách đầu mối'},
+    {source:'user', user:'Hà NTT', time:'14/04/2026 10:00', action:'edit', level:'task', target:'Thành lập đội dự án', attr:'planned_finish', oldVal:'15/04/2026', newVal:'16/04/2026'},
+    {source:'system', time:'16/04/2026 00:00', action:'edit', level:'task', target:'Lễ khởi động dự án', attr:'status', oldVal:'Chưa bắt đầu', newVal:'Đang thực hiện'},
+    {source:'user', user:'Long NNL', time:'16/04/2026 16:30', action:'edit', level:'subtask', target:'Soạn agenda buổi kick-off', attr:'finish_status', oldVal:'unfinished', newVal:'finished'},
+    {source:'user', user:'Anh LTD', time:'17/04/2026 09:00', action:'edit', level:'subtask', target:'Soạn agenda buổi kick-off', attr:'finish_status', oldVal:'finished', newVal:'approved'},
+    {source:'user', user:'Long NNL', time:'20/04/2026 14:00', action:'delete', level:'subtask', target:'Kiểm tra lại nội dung (bỏ)'},
+    {source:'user', user:'Long NNL', time:'20/04/2026 15:00', action:'edit', level:'wp', target:'Khởi động dự án', attr:'name', oldVal:'Khởi động dự án SAP', newVal:'Khởi động dự án'},
+  ]);
+  PMO.Trail.bind(container);
+})();
+</script>

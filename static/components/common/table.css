@@ -1,0 +1,188 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-table — Data Table
+   Features:
+   - Column resize (drag header borders)
+   - Row resize (drag row borders)
+   - Sticky header
+   - Alternating row colors
+   - Hover highlight
+   - Supports all child components inside cells
+   - Sort indicators
+   ═══════════════════════════════════════════════════════ */
+
+/* Wrapper — sets scroll context */
+.pmo-table-wrap {
+  border: 1px solid var(--b-light);
+  border-radius: 8px;
+  overflow: auto;
+  background: var(--bg-white);
+  position: relative;
+}
+.pmo-table-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+.pmo-table-wrap::-webkit-scrollbar-track { background: transparent; }
+.pmo-table-wrap::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+.pmo-table-wrap::-webkit-scrollbar-corner { background: transparent; }
+
+/* Table */
+.pmo-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+  table-layout: fixed;
+}
+
+/* ── HEAD ── */
+.pmo-table thead { position: sticky; top: 0; z-index: 10; }
+
+.pmo-table th {
+  background: var(--bg-app);
+  padding: 0;
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-align: left;
+  border-bottom: 2px solid var(--b-medium);
+  position: relative;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pmo-table th .th-inner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 12px;
+  min-height: 40px;
+  cursor: default;
+}
+
+/* Sort */
+.pmo-table th.sortable .th-inner { cursor: pointer; }
+.pmo-table th.sortable:hover { background: #EDF0F4; }
+.pmo-table th .sort-icon {
+  width: 14px; height: 14px;
+  color: var(--t3);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.pmo-table th.sortable:hover .sort-icon { opacity: 0.5; }
+.pmo-table th.sort-asc .sort-icon,
+.pmo-table th.sort-desc .sort-icon { opacity: 1; color: var(--brand); }
+.pmo-table th.sort-desc .sort-icon { transform: rotate(180deg); }
+
+/* Column resize handle */
+.pmo-table th .col-resize {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: col-resize;
+  z-index: 5;
+  background: transparent;
+  transition: background .1s;
+}
+.pmo-table th .col-resize:hover,
+.pmo-table th .col-resize.dragging {
+  background: var(--brand);
+}
+
+/* ── BODY ── */
+.pmo-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--b-light);
+  vertical-align: middle;
+  color: var(--t1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Row resize handle */
+.pmo-table td .row-resize {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 5px;
+  cursor: row-resize;
+  z-index: 3;
+  background: transparent;
+}
+.pmo-table td:first-child .row-resize:hover,
+.pmo-table td:first-child .row-resize.dragging {
+  background: var(--brand);
+  opacity: 0.4;
+}
+
+/* Alternating rows */
+.pmo-table tbody tr { transition: background .08s; }
+.pmo-table tbody tr:nth-child(even) { background: #FAFBFC; }
+.pmo-table tbody tr:hover { background: #F0F7FF !important; }
+
+/* Selected row */
+.pmo-table tbody tr.selected { background: #DBEAFE !important; }
+
+/* ── CELL CONTENT HELPERS ── */
+/* Truncate text with ellipsis by default */
+.pmo-table .cell-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+/* Allow wrapping */
+.pmo-table .cell-wrap {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+}
+/* Center content */
+.pmo-table .cell-center { text-align: center; }
+/* Numeric right-align */
+.pmo-table .cell-num { text-align: right; font-variant-numeric: tabular-nums; }
+/* Bold primary text */
+.pmo-table .cell-primary { font-weight: 600; color: var(--t1); }
+/* Secondary muted text */
+.pmo-table .cell-secondary { font-size: 11px; color: var(--t3); }
+/* Flex row for multiple items in cell */
+.pmo-table .cell-flex {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+/* Stack for multi-line cell content */
+.pmo-table .cell-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── EMPTY STATE ── */
+.pmo-table-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--t3);
+  font-size: 13px;
+}
+.pmo-table-empty svg {
+  width: 40px; height: 40px;
+  color: var(--b-medium);
+  margin-bottom: 8px;
+}
+
+/* ── FOOTER ── */
+.pmo-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--t3);
+  border-top: 1px solid var(--b-light);
+  background: var(--bg-app);
+}

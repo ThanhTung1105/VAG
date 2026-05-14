@@ -1,0 +1,18 @@
+<div class="sec" id="approve">
+  <div class="sec-head"><span class="sec-title">Approve Subtask</span><span class="sec-id">popover_detail/approve</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Danh sách sub-task chờ duyệt. "Duyệt" = chuyển approved ngay. "Từ chối" = mở ô nhập lý do.</p>
+  <div class="card" style="max-width:540px" id="approveDemo"></div>
+</div>
+<script>
+(function(){
+  var container = document.getElementById('approveDemo');
+  container.innerHTML = PMO.Approve.renderList([
+    {id:'a1', content:'Soạn agenda buổi kick-off', assignee:'Long NNL', finishedAt:'16/04 16:30', status:'pending'},
+    {id:'a2', content:'Chuẩn bị phòng họp kick-off', assignee:'Hà NTT', finishedAt:'15/04 14:00', status:'pending'},
+    {id:'a3', content:'Lập danh sách đầu mối liên hệ', assignee:'Long NNL', finishedAt:'13/04 17:00', status:'approved', approvedAt:'14/04 09:00'},
+    {id:'a4', content:'Xác định thành viên các team', assignee:'Hà NTT', finishedAt:'14/04 10:00', status:'rejected', approvedAt:'14/04 15:00', note:'Thiếu thành viên phòng Kế toán, bổ sung lại.'},
+  ]);
+  PMO.Approve.bind(container);
+})();
+</script>

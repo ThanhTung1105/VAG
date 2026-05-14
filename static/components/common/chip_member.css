@@ -1,0 +1,176 @@
+/* ═══════════════════════════════════════════════════════
+   pmo-chip — Chip Member
+   Individual: avatar + name, hover reveals ×
+   With role: avatar + name/role stacked
+   List: flex-wrap, max-height = --chip-lines * line-height, scrollbar
+   Add: dashed border button
+   ═══════════════════════════════════════════════════════ */
+.pmo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 4px;
+  border-radius: 12px;
+  background: var(--brand-light);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--brand-dark);
+  cursor: default;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.pmo-chip .chip-av {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: white;
+  font-size: 7.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pmo-chip .chip-x {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 2px;
+  transition: background .1s;
+}
+.pmo-chip .chip-x:hover { background: rgba(0,102,179,0.15); }
+.pmo-chip:hover .chip-x { display: flex; }
+
+/* ── Chip with role (name + chức danh) ── */
+.pmo-chip.has-role {
+  padding: 4px 8px 4px 4px;
+  border-radius: 16px;
+}
+.pmo-chip.has-role .chip-av {
+  width: 26px; height: 26px;
+  font-size: 9px;
+}
+.pmo-chip .chip-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  gap: 0;
+}
+.pmo-chip .chip-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand-dark);
+}
+.pmo-chip .chip-role {
+  font-size: 9.5px;
+  font-weight: 400;
+  color: var(--t3);
+}
+
+/* ── Chip Add ── */
+.pmo-chip-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1.5px dashed var(--b-medium);
+  background: transparent;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--t3);
+  cursor: pointer;
+  transition: all .15s;
+}
+.pmo-chip-add:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+
+/* ── Chip List ──
+   --chip-lines: number of visible lines before scroll (default 3)
+   Each chip line ≈ 30px (chip height + gap)
+*/
+.pmo-chip-list {
+  --chip-lines: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: calc(var(--chip-lines) * 30px);
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.pmo-chip-list::-webkit-scrollbar { width: 4px; }
+.pmo-chip-list::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+
+/* Modifier: override lines */
+.pmo-chip-list.lines-2 { --chip-lines: 2; }
+.pmo-chip-list.lines-4 { --chip-lines: 4; }
+.pmo-chip-list.lines-5 { --chip-lines: 5; }
+
+/* ═══ Group Chip ═══ */
+.pmo-chip-group {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px 2px 2px; border-radius: 14px;
+  background: #FFF7ED; border: 1px solid #FDBA74;
+  font-size: 11px; color: #9A3412; font-weight: 500;
+  cursor: pointer; position: relative; white-space: nowrap;
+}
+.chip-grp-av {
+  width: 20px; height: 20px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.pmo-chip-group .chip-x { margin-left: 2px; cursor: pointer; color: #FDBA74; font-size: 14px; }
+.pmo-chip-group .chip-x:hover { color: #DC2626; }
+
+/* Group tooltip — shown via JS, fixed position, never clipped */
+.chip-grp-tooltip {
+  position: fixed;
+  background: var(--bg-white, #fff); border: 1px solid var(--b-light);
+  border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  padding: 8px; min-width: 160px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 4px;
+  pointer-events: none;
+}
+.pmo-chip-group { position: relative; }
+.chip-grp-tip-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--t1); padding: 3px 4px;
+  border-radius: 4px; white-space: nowrap;
+}
+.chip-grp-tip-item:hover { background: var(--bg-app); }
+
+/* ═══ Inline Chip (compact for table cells) ═══ */
+.pmo-chip-inline {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 7px 2px 2px; border-radius: 10px;
+  border: 1px solid var(--b-light, #E5E7EB);
+  background: var(--bg-white, #fff);
+  font-size: 10.5px; font-weight: 500; color: var(--t1);
+  white-space: nowrap; cursor: default;
+}
+.pmo-chip-inline .chi-av {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--brand, #0066B3); color: #fff;
+  font-size: 7px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pmo-chip-inline.grp { border-color: #FDBA74; background: #FFFAF5; }
+.pmo-chip-inline.grp .chi-av { /* color set inline via style */ }
+.pmo-chip-inline.more {
+  border-style: dashed; color: var(--t3); font-size: 10px;
+  padding: 2px 6px; cursor: default;
+}
+
+/* Compact wrapper for table cells */
+.pmo-chip-compact { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+
+/* Member chip — add thin border to match inline style */
+.pmo-chip { border: 1px solid var(--brand-light, #E8F2FA); }

@@ -1,0 +1,48 @@
+<div class="sec" id="table">
+  <div class="sec-head"><span class="sec-title">Table</span><span class="sec-id">common/table</span></div>
+  <div class="sec-line"></div>
+  <p class="sec-desc">Data table — resize cột (kéo viền phải header), resize hàng (kéo viền dưới hàng), sort (click header). Thử kéo thả!</p>
+  <div id="tableDemo1" style="margin-bottom:16px"></div>
+  <div class="row-label" style="margin-top:20px">Empty state</div>
+  <div id="tableDemo2"></div>
+</div>
+<script>
+PMO.Table.render(document.getElementById('tableDemo1'), {
+  columns: [
+    { key:'name', label:'Hạng mục', width:220, sortable:true,
+      render:(v)=>`<span class="cell-primary">${v}</span>` },
+    { key:'pic', label:'PIC', width:100, sortable:true,
+      render:(v)=>v?PMO.Avatar.render(v,'sm')+`<span style="margin-left:6px;font-size:11px">${v}</span>`:'' },
+    { key:'assignees', label:'Assignees', width:90,
+      render:(v)=>v&&v.length?PMO.Avatar.renderGroup(v,'sm'):'' },
+    { key:'status', label:'Trạng thái', width:130, sortable:true,
+      render:(v,row)=>PMO.StatusChip.render(v,row.health) },
+    { key:'health', label:'Sức khỏe', width:120, sortable:true,
+      render:(v)=>PMO.HealthChip.render(v) },
+    { key:'deadline', label:'Deadline', width:100, sortable:true,
+      render:(v,row)=>PMO.Date.render(v,{overdue:row.health==='behind_schedule',showTime:false}) },
+    { key:'milestone', label:'MS', width:50, align:'center',
+      render:(v,row)=>PMO.Milestone.render(v,row.health) },
+    { key:'kqc', label:'Kết quả chính', width:200,
+      render:(v)=>v?`<span class="cell-wrap" style="font-size:11.5px">${v}</span>`:'<span class="cell-secondary">—</span>' },
+    { key:'raiqd', label:'RAIQD', width:80,
+      render:(v)=>v?PMO.RAIQD.render(v.type,v.id):'' },
+    { key:'note', label:'', width:36, align:'center',
+      render:(v)=>PMO.NoteIcon.render(v) },
+  ],
+  rows: [
+    {name:'Khởi động dự án',pic:'Long NNL',assignees:['Long NNL','Hà NTT','Minh PT'],status:'in_progress',health:'on_track',deadline:'2026-04-27',milestone:'big',kqc:'Dự án chính thức khởi động',raiqd:null,note:'Cần hoàn thành trước 27/04'},
+    {name:'Đào tạo tổng quan SAP',pic:'Minh PT',assignees:['Minh PT','Citek Team'],status:'in_progress',health:'at_risk',deadline:'2026-05-11',milestone:'small',kqc:'Nhân sự nắm tổng quan SAP',raiqd:{type:'risk',id:'R-001'},note:'Citek chậm gửi tài liệu'},
+    {name:'Khảo sát hiện trường',pic:'Citek Team',assignees:['Citek Team','Long NNL'],status:'not_started',health:'on_track',deadline:'2026-05-25',milestone:'small',kqc:'Hoàn thành khảo sát as-is',raiqd:null,note:null},
+    {name:'Phân tích giải pháp',pic:'Citek Team',assignees:['Citek Team','Long NNL','Minh PT'],status:'not_started',health:'on_track',deadline:'2026-06-15',milestone:'big',kqc:'Giải pháp to-be xác định',raiqd:{type:'action',id:'A-003'},note:null},
+    {name:'Triển khai Outlook & Teams',pic:'Long NNL',assignees:['Long NNL','Hà NTT'],status:'in_progress',health:'on_track',deadline:'2026-05-30',milestone:'big',kqc:'100% nhân sự dùng Outlook+Teams',raiqd:null,note:null},
+    {name:'Tư vấn pháp lý holding',pic:'Anh LTD',assignees:['Anh LTD','Long NNL'],status:'not_started',health:'on_track',deadline:'2026-07-30',milestone:'big',kqc:'Phương án pháp lý holding',raiqd:{type:'question',id:'Q-002'},note:null},
+    {name:'Hội thảo nghiệp vụ',pic:'Citek Team',assignees:['Citek Team','Long NNL'],status:'completed',health:'on_track',deadline:'2026-07-13',milestone:'big',kqc:'Nghiệp vụ thống nhất',raiqd:{type:'decision',id:'D-001'},note:null},
+    {name:'Cấu hình Entra ID',pic:'Long NNL',assignees:['Long NNL'],status:'completed',health:'behind_schedule',deadline:'2026-04-20',milestone:'none',kqc:'',raiqd:{type:'issue',id:'I-005'},note:'Hoàn thành chậm 2 ngày'},
+  ]
+});
+PMO.Table.render(document.getElementById('tableDemo2'), {
+  columns:[{key:'name',label:'Hạng mục',width:200},{key:'status',label:'Trạng thái',width:120},{key:'pic',label:'PIC',width:100}],
+  rows:[], emptyText:'Chưa có dữ liệu nào'
+});
+</script>
