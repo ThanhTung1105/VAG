@@ -30,11 +30,11 @@ body { font-family:'Nunito Sans',sans-serif; background:var(--bg); color:var(--t
   <div class="error" id="error"></div>
   <div class="form-group">
     <label>Email</label>
-    <input type="email" id="email" placeholder="email@vietanh-group.com" autofocus>
+    <input type="email" id="pmo_email" placeholder="email@vietanh-group.com" autofocus>
   </div>
   <div class="form-group">
     <label>Mật khẩu</label>
-    <input type="password" id="password" placeholder="••••••••">
+    <input type="password" id="pmo_password" placeholder="••••••••">
   </div>
   <button class="btn-login" id="btnLogin">Đăng nhập</button>
 </div>
@@ -43,8 +43,8 @@ body { font-family:'Nunito Sans',sans-serif; background:var(--bg); color:var(--t
   var btn = document.getElementById('btnLogin');
   var err = document.getElementById('error');
   function doLogin() {
-    var emailVal = document.getElementById('email').value.trim();
-    var passVal = document.getElementById('password').value;
+    var emailVal = document.getElementById('pmo_email').value.trim();
+    var passVal = document.getElementById('pmo_password').value;
     err.style.display = 'none'; btn.disabled = true; btn.textContent = 'Đang đăng nhập...';
     fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:emailVal, password:passVal}) })
     .then(function(r) { return r.json().then(function(d) { return {ok:r.ok,data:d}; }); })
@@ -55,8 +55,8 @@ body { font-family:'Nunito Sans',sans-serif; background:var(--bg); color:var(--t
     .catch(function() { err.textContent='Không thể kết nối server'; err.style.display='block'; btn.disabled=false; btn.textContent='Đăng nhập'; });
   }
   btn.addEventListener('click', doLogin);
-  document.getElementById('password').addEventListener('keydown', function(e) { if (e.key==='Enter') doLogin(); });
-  document.getElementById('email').addEventListener('keydown', function(e) { if (e.key==='Enter') document.getElementById('password').focus(); });
+  document.getElementById('pmo_password').addEventListener('keydown', function(e) { if (e.key==='Enter') doLogin(); });
+  document.getElementById('pmo_email').addEventListener('keydown', function(e) { if (e.key==='Enter') document.getElementById('pmo_password').focus(); });
 })();
 </script>
 </body>
